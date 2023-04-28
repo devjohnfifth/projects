@@ -1,13 +1,11 @@
 {-*=============================================================
  	Nome: 	João Lucas de Melo Quintão
-	Numero:	1708654
-
-			AULA 2: figuras
+	IMG MANIPULATION HORSE
 ==============================================================*-}
 
-{-*===============[Declara o tipo]=============== *-}
+{-*================[TYPE PICTURE]================ *-}
 
-type Picture = [[Char]]		--String
+type Picture = [[Char]]		--ARRAY OF STRINGS OR ARRAY OF ARRAY CHAR
 
 {-*============================================== *-}
 
@@ -46,7 +44,7 @@ white =	["............",
 {-*============================================== *-}
 
 
-{-*================[Print Imagem]================ *-}
+{-*================[Print Image]================= *-}
 
 printPicture :: Picture -> IO()
 printPicture = putStr.concat.map(++"\n")
@@ -61,7 +59,7 @@ flipH = reverse
 
 
 flipV :: Picture -> Picture
-flipV = map reverse --map aplica em cada elemento ou seja a String
+flipV = map reverse --Reverse each array element (string) [abcde] -> [edcba]
 
 {-*============================================== *-}
 
@@ -128,7 +126,7 @@ printPicture (above (sideBySide white (invertColour white)) (sideBySide (invertC
 
 printPicture (sideBySide (above white (invertColour white)) (above (invertColour white) white)) 
 
-*-}
+
 
 
 

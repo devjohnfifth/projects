@@ -1,69 +1,55 @@
---
---Programacao Funcional
---Aula de 13 de marco de 2023
---
 
---EXE_1
---CALCULAR O MAIOR DE 2 NUMEROS
---maior entre 2 e 3 = 3
-
-
-
---EXE_3
---CALCULAR A MEDIA ARITIMETICA ENTRE DOIS VALORES
---media 2 e 3 = 2.5
-
-media :: Float -> Float -> Float
-media a b =  (a+b)/2
+average :: Float -> Float -> Float
+average a b =  (a+b)/2
 
 
 
 --EXE_4
---CALCULAR O QUADRADO DE UM INTEIRO
---quadrado 2 =4
+--CALCULAR O square DE UM INTEIRO
+--square 2 =4
 
-quadrado :: Int -> Int
-quadrado n = n^2
+square :: Int -> Int
+square n = n^2
 
 
 --EXE_5
---CALCULAR O ABSOLUTO DE UM INTEIRO
---ABSOLUTO -2 = 2
+--CALCULAR O ABSOLUTe DE UM INTEIRO
+--ABSOLUTe -2 = 2
 
-absoluto :: Int -> Int
-absoluto n
+absolute :: Int -> Int
+absolute n
  | n >= 0 		= n
  | otherwise 	= -n
 
 
 
 --EXE_6
---Verifica se um numero[n] e MULTIPLO de outro[m]
---multiplo 4 2 = 0
---multiplo 4 3 = 1
+--Verifica se um numero[n] e MULTIPLe de outro[m]
+--multiple 4 2 = 0
+--multiple 4 3 = 1
 
-multiplo :: Int -> Int -> Int
-multiplo n m = n`mod` m
+multiple :: Int -> Int -> Int
+multiple n m = n`mod` m
  
 
 
 
 --EXE_7
---Verifica se um numero e IMPAR
---IMPAR 
+--Verifica se um numero e odd
+--odd 
 
-impar :: Int -> Bool
-impar n
+odd :: Int -> Bool
+odd n
  | (n `mod` 2) == 0 = False
  | otherwise = True
  
 
 --EXE_8
---Verifica se 3 numerosinterios sao iguais
---iguais 4 4 4 = true 
+--Verifica se 3 numerosinterios sao equals
+--equals 4 4 4 = true 
 
-iguais :: Int -> Int -> Int -> Bool
-iguais m n p = (m==n) && (n==p)
+equals :: Int -> Int -> Int -> Bool
+equals m n p = (m==n) && (n==p)
 
 
 
@@ -81,8 +67,8 @@ max3 m n p
 --Verificao a meida entre 3 numeros interios 
 --max 4 4 4 = true 
 
-media3f :: Float -> Float -> Float -> Float
-media3f a b c = ( (min3f a b c) + (max3f a b c) ) / 2.0
+average3f :: Float -> Float -> Float -> Float
+average3f a b c = ( (min3f a b c) + (max3f a b c) ) / 2.0
 
 
 min3f :: Float -> Float -> Float -> Float
@@ -108,17 +94,17 @@ max3f m n p
  | otherwise = maxf n p
 
 --EXE_12
---O quadrado do sucessor do maior inteiro
+--O square do sucessor do maior inteiro
 
 quadSucessor :: Int -> Int -> Int -> Int
-quadSucessor a b c = quadrado(max3 a b c + 1)
+quadSucessor a b c = square(max3 a b c + 1)
 
 
 --EXE_13
 --Dados 4 valores mapelos na sua soma se a divisao da soma por 5 for exata entao mapealos em 0 caso contrario
  
-seDiv5Soma :: Int -> Int -> Int -> Int -> Int
-seDiv5Soma a b c d
+ifDiv5Plus :: Int -> Int -> Int -> Int -> Int
+ifDiv5Plus a b c d
  | (a+b+c+d)`mod`5 == 0 = (a+b+c+d)
  | otherwise = 0
 
@@ -126,11 +112,11 @@ seDiv5Soma a b c d
 --EXE_14
 --AREA E PERIMETRO DE UM CIRCULO
 
-areaCirculo :: Float -> Float
-areaCirculo r = pi * (r^2) 
+circleArea :: Float -> Float
+circleArea r = pi * (r^2) 
 
-perimetroCirculo :: Float -> Float
-perimetroCirculo r = 2 * pi * r
+circlePerimeter :: Float -> Float
+circlePerimeter r = 2 * pi * r
 
 
 
@@ -149,8 +135,8 @@ f x y = (x+z) * (y+z)
 --soma dos naturais
 
 
-somaNat :: Int -> Int
-somaNat n = (n *(n+1)) `div` 2
+plusNatural :: Int -> Int
+plusNatural n = (n *(n+1)) `div` 2
 
 
 
