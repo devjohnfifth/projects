@@ -1,2 +1,2 @@
 # projects
-This repository have some projects that I worked.
+This repository has some projects that I worked.
