@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GeoGuessr Clue Mapper</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,19 +14,16 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
     <style>
-        /* Estilos personalizados para complementar o Tailwind e o Leaflet */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: "Inter", sans-serif;
             overflow: hidden;
-            /* Evita scroll na página principal */
         }
 
-        /* Estilo do mapa para evitar o contorno azul ao focar */
         .leaflet-container {
             background-color: #f0f2f5;
         }
@@ -35,7 +32,6 @@
             outline: none;
         }
 
-        /* Estilo para a barra de scroll no painel de filtros */
         #filter-panel-content::-webkit-scrollbar {
             width: 6px;
         }
@@ -53,7 +49,6 @@
             background: #555;
         }
 
-        /* Estilo para os tooltips de exemplo dos filtros */
         #filter-tooltip {
             position: fixed;
             display: none;
@@ -61,15 +56,14 @@
             background-color: white;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
             z-index: 10000;
             pointer-events: none;
-            /* Garante que o tooltip não interfere com o mouse */
             transition: opacity 0.2s;
             max-width: 320px;
         }
 
-        /* Estilo para transição do painel de filtros em mobile */
         #filter-panel {
             transition: transform 0.3s ease-in-out;
         }
@@ -77,13 +71,14 @@
 </head>
 
 <body class="bg-gray-100 text-gray-800">
-
     <div id="app" class="flex h-screen w-screen">
         <aside id="filter-panel"
             class="absolute md:relative z-30 flex flex-col h-full w-full max-w-sm bg-white shadow-lg transform -translate-x-full md:translate-x-0">
             <div class="p-4 border-b border-gray-200 flex-shrink-0">
                 <div class="flex justify-between items-center mb-3">
-                    <h1 class="text-xl font-bold text-gray-900">GeoGuessr Clue Mapper</h1>
+                    <h1 class="text-xl font-bold text-gray-900">
+                        GeoGuessr Clue Mapper
+                    </h1>
                     <button id="close-filters-btn" class="md:hidden text-gray-500 hover:text-gray-800">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
@@ -94,24 +89,24 @@
                 </div>
                 <div class="flex justify-between items-start">
                     <div>
-                        <p id="result-count" class="text-sm text-gray-600 font-medium" aria-live="polite">Mostrando 0 de 0
-                            países</p>
+                        <p id="result-count" class="text-sm text-gray-600 font-medium" aria-live="polite">
+                            Mostrando 0 de 0 países
+                        </p>
                         <div id="country-list-container" class="text-xs text-gray-500 mt-1 max-w-xs"></div>
                     </div>
                     <button id="clear-filters"
-                        class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex-shrink-0">Limpar
-                        Tudo</button>
+                        class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex-shrink-0">
+                        Limpar Tudo
+                    </button>
                 </div>
             </div>
 
             <div id="active-filters-container" class="p-2 border-b border-gray-200 flex-shrink-0">
-                <div id="active-filters" class="flex flex-wrap gap-2">
-                    </div>
+                <div id="active-filters" class="flex flex-wrap gap-2"></div>
             </div>
 
             <div id="filter-panel-content" class="flex-grow overflow-y-auto p-4">
-                <div id="filter-accordions" class="space-y-2">
-                    </div>
+                <div id="filter-accordions" class="space-y-2"></div>
             </div>
         </aside>
 
@@ -129,199 +124,221 @@
     </div>
 
     <div id="filter-tooltip">
-        <img id="tooltip-img" src="" alt="Exemplo de filtro" class="rounded-md mb-2 max-w-[250px] h-auto">
+        <img id="tooltip-img" src="" alt="Exemplo de filtro" class="rounded-md mb-2 max-w-[250px] h-auto" />
         <p id="tooltip-text" class="text-sm text-gray-700"></p>
     </div>
 
     <script type="module">
-        // ===================================================================================
-        // DADOS GEOJSON DOS PAÍSES
-        // ===================================================================================
-        const geoJsonData = {
-            "type": "FeatureCollection",
-            "features": []
-        };
-
-        // ===================================================================================
-        // DADOS DOS ATRIBUTOS DOS PAÍSES PARA FILTRAGEM
-        // ===================================================================================
+        const geoJsonData = { type: "FeatureCollection", features: [] };
         const countriesData = [];
-
-        // ===================================================================================
-        // DEFINIÇÃO DOS FILTROS E SUAS OPÇÕES
-        // ===================================================================================
         const filterOptions = {};
-
-        // Países sem cobertura oficial no GeoGuessr (aproximado, pode mudar)
         const noCoverageCountries = new Set([
-            'AF', 'AS', 'BI', 'BJ', 'BF', 'CV', 'CF', 'TD', 'CN', 'KM', 'CD', 'CG',
-            'CI', 'CU', 'DJ', 'EG', 'GQ', 'ER', 'ET', 'GA', 'GM', 'GN', 'GW',
-            'IR', 'IQ', 'LY', 'ML', 'MR', 'MA', 'MM', 'NE', 'KP', 'OM',
-            'RW', 'SA', 'SL', 'SO', 'SS', 'SD', 'SY', 'TJ',
-            'TG', 'TM', 'VU', 'YE'
+            "AF",
+            "AS",
+            "BI",
+            "BJ",
+            "BF",
+            "CV",
+            "CF",
+            "TD",
+            "CN",
+            "KM",
+            "CD",
+            "CG",
+            "CI",
+            "CU",
+            "DJ",
+            "EG",
+            "GQ",
+            "ER",
+            "ET",
+            "GA",
+            "GM",
+            "GN",
+            "GW",
+            "IR",
+            "IQ",
+            "LY",
+            "ML",
+            "MR",
+            "MA",
+            "MM",
+            "NE",
+            "KP",
+            "OM",
+            "RW",
+            "SA",
+            "SL",
+            "SO",
+            "SS",
+            "SD",
+            "SY",
+            "TJ",
+            "TG",
+            "TM",
+            "VU",
+            "YE",
         ]);
 
-        // ===================================================================================
-        // LÓGICA DA APLICAÇÃO
-        // ===================================================================================
-        document.addEventListener('DOMContentLoaded', async () => {
-            // --- CARREGAMENTO DE DADOS ---
+        document.addEventListener("DOMContentLoaded", async () => {
             await loadGeoJsonData();
             populateData();
 
-            // --- INICIALIZAÇÃO DO MAPA ---
-            const map = L.map('map', {
+            const map = L.map("map", {
                 center: [20, 0],
                 zoom: 2,
                 minZoom: 2,
                 maxZoom: 10,
                 worldCopyJump: true,
-                maxBounds: [[-90, -180], [90, 180]]
+                maxBounds: [
+                    [-90, -180],
+                    [90, 180],
+                ],
             });
-
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                subdomains: 'abcd'
-            }).addTo(map);
+            L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",
+                {
+                    attribution:
+                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                    subdomains: "abcd",
+                }
+            ).addTo(map);
 
             let geoJsonLayer;
-            let filteredCountries = new Set(countriesData.map(c => c.iso_a2));
+            let filteredCountries = new Set(countriesData.map((c) => c.iso_a2));
             let totalCountriesWithData = countriesData.length;
-
             let specialMarkersLayer = L.layerGroup().addTo(map);
             const specialCases = {
-                'HK': { lat: 22.3193, lng: 114.1694, name: "Hong Kong" },
-                'MO': { lat: 22.1987, lng: 113.5439, name: "Macau" }
+                HK: { lat: 22.3193, lng: 114.1694, name: "Hong Kong" },
+                MO: { lat: 22.1987, lng: 113.5439, name: "Macau" },
             };
 
-            // --- ESTILOS DO MAPA ---
             const defaultStyle = {
                 fillColor: "#d1d5db",
                 weight: 1,
                 opacity: 1,
-                color: 'white',
-                fillOpacity: 0.7
+                color: "white",
+                fillOpacity: 0.7,
             };
-
             const highlightStyle = {
                 fillColor: "#3b82f6",
                 weight: 1,
                 opacity: 1,
-                color: 'white',
-                fillOpacity: 0.7
+                color: "white",
+                fillOpacity: 0.7,
             };
-
             const noCoverageStyle = {
                 fillColor: "#6b7280",
                 weight: 1,
                 opacity: 1,
-                color: 'white',
-                fillOpacity: 0.5
+                color: "white",
+                fillOpacity: 0.5,
             };
 
             function styleGeoJSON(feature) {
                 const iso_a2 = feature.properties.iso_a2;
-                if (noCoverageCountries.has(iso_a2)) {
-                    return noCoverageStyle;
-                }
+                if (noCoverageCountries.has(iso_a2)) return noCoverageStyle;
                 return filteredCountries.has(iso_a2) ? highlightStyle : defaultStyle;
             }
 
             function onEachFeature(feature, layer) {
                 layer.bindTooltip(feature.properties.name, {
                     sticky: true,
-                    direction: 'top',
-                    className: 'font-sans'
+                    direction: "top",
+                    className: "font-sans",
                 });
-
                 layer.on({
-                    mouseover: e => {
+                    mouseover: (e) => {
                         const l = e.target;
-                        l.setStyle({
-                            weight: 2,
-                            color: '#333',
-                        });
-                        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                        l.setStyle({ weight: 2, color: "#333" });
+                        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge)
                             l.bringToFront();
-                        }
                     },
-                    mouseout: e => {
-                        geoJsonLayer.resetStyle(e.target);
-                    }
+                    mouseout: (e) => geoJsonLayer.resetStyle(e.target),
                 });
             }
 
-            // --- LÓGICA DE FILTRAGEM ---
-            const resultCountEl = document.getElementById('result-count');
-            const countryListContainer = document.getElementById('country-list-container');
-            const activeFiltersContainer = document.getElementById('active-filters');
+            const resultCountEl = document.getElementById("result-count");
+            const countryListContainer = document.getElementById(
+                "country-list-container"
+            );
+            const activeFiltersContainer =
+                document.getElementById("active-filters");
 
             function applyFilters() {
                 const activeFilters = {};
-                const checkedCheckboxes = document.querySelectorAll('#filter-accordions input[type="checkbox"]:checked');
-
-                checkedCheckboxes.forEach(checkbox => {
-                    const [category, value] = checkbox.id.split(':');
-                    if (!activeFilters[category]) {
-                        activeFilters[category] = [];
-                    }
-                    activeFilters[category].push(value);
-                });
-
-                let matchingCountries = countriesData.filter(country => {
-                    return Object.entries(activeFilters).every(([category, values]) => {
-                        const countryAttribute = country.attributes[category];
-                        if (Array.isArray(countryAttribute)) {
-                            return values.some(v => countryAttribute.includes(v));
-                        }
-                        return values.includes(String(countryAttribute));
+                document
+                    .querySelectorAll(
+                        '#filter-accordions input[type="checkbox"]:checked'
+                    )
+                    .forEach((checkbox) => {
+                        if (checkbox.dataset.formatGroup) return;
+                        const [category, value] = checkbox.id.split(":");
+                        if (!activeFilters[category]) activeFilters[category] = [];
+                        activeFilters[category].push(value);
                     });
-                });
 
-                filteredCountries = new Set(matchingCountries.map(c => c.iso_a2));
+                let matchingCountries = countriesData.filter((country) =>
+                    Object.entries(activeFilters).every(([category, values]) => {
+                        const countryAttribute = country.attributes[category];
+                        if (Array.isArray(countryAttribute))
+                            return values.some((v) => countryAttribute.includes(v));
+                        return values.includes(String(countryAttribute));
+                    })
+                );
+
+                filteredCountries = new Set(matchingCountries.map((c) => c.iso_a2));
                 updateUI(matchingCountries);
-                if (geoJsonLayer) {
-                    geoJsonLayer.setStyle(styleGeoJSON);
-                }
+                if (geoJsonLayer) geoJsonLayer.setStyle(styleGeoJSON);
                 updateSpecialMarkers();
             }
 
             function updateUI(matchingCountries) {
                 resultCountEl.textContent = `Mostrando ${filteredCountries.size} de ${totalCountriesWithData} países`;
-
-                countryListContainer.innerHTML = '';
+                countryListContainer.innerHTML = "";
                 if (filteredCountries.size > 0 && filteredCountries.size < 10) {
-                    const countryNames = matchingCountries.map(c => c.name).join(', ');
-                    countryListContainer.textContent = countryNames;
+                    countryListContainer.textContent = matchingCountries
+                        .map((c) => c.name)
+                        .join(", ");
                 }
 
-                activeFiltersContainer.innerHTML = '';
-                const checkedCheckboxes = document.querySelectorAll('#filter-accordions input[type="checkbox"]:checked');
-                checkedCheckboxes.forEach(checkbox => {
-                    const label = document.querySelector(`label[for="${checkbox.id}"]`).textContent;
-                    const chip = document.createElement('div');
-                    chip.className = 'flex items-center bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full';
-                    chip.innerHTML = `
-                        <span>${label}</span>
-                        <button data-filter-id="${checkbox.id}" class="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none">
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                        </button>
-                    `;
-                    activeFiltersContainer.appendChild(chip);
-                });
-
-                activeFiltersContainer.querySelectorAll('button').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const filterId = button.dataset.filterId;
-                        document.getElementById(filterId).checked = false;
-                        applyFilters();
+                activeFiltersContainer.innerHTML = "";
+                document
+                    .querySelectorAll(
+                        '#filter-accordions input[type="checkbox"]:checked'
+                    )
+                    .forEach((checkbox) => {
+                        if (checkbox.dataset.formatGroup) return;
+                        const label = document.querySelector(
+                            `label[for="${checkbox.id}"]`
+                        ).textContent;
+                        const chip = document.createElement("div");
+                        chip.className =
+                            "flex items-center bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full";
+                        chip.innerHTML = `<span>${label}</span><button data-filter-id="${checkbox.id}" class="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>`;
+                        activeFiltersContainer.appendChild(chip);
                     });
-                });
+
+                activeFiltersContainer
+                    .querySelectorAll("button")
+                    .forEach((button) => {
+                        button.addEventListener("click", () => {
+                            const checkbox = document.getElementById(
+                                button.dataset.filterId
+                            );
+                            if (checkbox) {
+                                checkbox.checked = false;
+                                checkbox.dispatchEvent(
+                                    new Event("change", { bubbles: true })
+                                );
+                            }
+                        });
+                    });
             }
 
             function updateSpecialMarkers() {
                 specialMarkersLayer.clearLayers();
-                Object.keys(specialCases).forEach(iso_a2 => {
+                Object.keys(specialCases).forEach((iso_a2) => {
                     if (filteredCountries.has(iso_a2)) {
                         const country = specialCases[iso_a2];
                         L.circle([country.lat, country.lng], {
@@ -329,116 +346,216 @@
                             color: highlightStyle.fillColor,
                             weight: 2,
                             fillColor: highlightStyle.fillColor,
-                            fillOpacity: 0.6
-                        }).bindTooltip(country.name, { sticky: true, className: 'font-sans' }).addTo(specialMarkersLayer);
+                            fillOpacity: 0.6,
+                        })
+                            .bindTooltip(country.name, {
+                                sticky: true,
+                                className: "font-sans",
+                            })
+                            .addTo(specialMarkersLayer);
                     }
                 });
             }
 
             function createFilterUI() {
-                const filterAccordions = document.getElementById('filter-accordions');
+                const filterAccordions = document.getElementById("filter-accordions");
                 Object.entries(filterOptions).forEach(([categoryId, category]) => {
-                    const accordion = document.createElement('div');
-                    accordion.className = 'bg-gray-50 rounded-lg';
+                    const accordion = document.createElement("div");
+                    accordion.className = "bg-gray-50 rounded-lg";
+                    const button = document.createElement("button");
+                    button.className =
+                        "w-full flex justify-between items-center p-3 text-left font-semibold text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg";
+                    button.setAttribute("aria-expanded", "false");
+                    button.innerHTML = `<span>${category.label}</span><svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>`;
+                    const content = document.createElement("div");
+                    content.className = "hidden p-3 border-t border-gray-200";
 
-                    const button = document.createElement('button');
-                    button.className = 'w-full flex justify-between items-center p-3 text-left font-semibold text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg';
-                    button.setAttribute('aria-expanded', 'false');
-                    button.innerHTML = `
-                        <span>${category.label}</span>
-                        <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    `;
+                    if (category.type === "nested") {
+                        const mainList = document.createElement("ul");
+                        mainList.className = "space-y-2";
+                        Object.entries(category.formats).forEach(
+                            ([formatName, options]) => {
+                                const formatSlug = formatName
+                                    .toLowerCase()
+                                    .replace(/[^a-z0-9]+/g, "-");
+                                const groupItem = document.createElement("li");
+                                const groupCheckboxId = `${categoryId}:${formatSlug}`;
+                                groupItem.innerHTML = `<label for="${groupCheckboxId}" class="flex items-center space-x-2 text-sm font-bold text-gray-600 cursor-pointer group"><input type="checkbox" id="${groupCheckboxId}" data-format-group="${formatSlug}" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"><span>${formatName}</span></label>`;
 
-                    const content = document.createElement('div');
-                    content.className = 'hidden p-3 border-t border-gray-200';
-                    const list = document.createElement('ul');
-                    list.className = 'space-y-2';
+                                const subList = document.createElement("ul");
+                                subList.className = "space-y-2 pl-6 pt-2";
+                                options.forEach((option) => {
+                                    const listItem = document.createElement("li");
+                                    const checkboxId = `${categoryId}:${option.value}`;
+                                    listItem.innerHTML = `<label for="${checkboxId}" class="flex items-center space-x-2 text-sm text-gray-800 cursor-pointer group" data-tooltip-img="${option.image || ""
+                                        }" data-tooltip-text="${option.label
+                                        }"><input type="checkbox" id="${checkboxId}" data-format-member="${formatSlug}" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"><span>${option.label
+                                        }</span></label>`;
+                                    subList.appendChild(listItem);
+                                });
 
-                    category.options.forEach(option => {
-                        const listItem = document.createElement('li');
-                        const checkboxId = `${categoryId}:${option.value}`;
-                        listItem.innerHTML = `
-                            <label for="${checkboxId}" class="flex items-center space-x-2 text-sm text-gray-800 cursor-pointer group" data-tooltip-img="${option.image || ''}" data-tooltip-text="${option.label}">
-                                <input type="checkbox" id="${checkboxId}" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <span>${option.label}</span>
-                            </label>
-                        `;
-                        list.appendChild(listItem);
-                    });
+                                groupItem.appendChild(subList);
+                                mainList.appendChild(groupItem);
+                            }
+                        );
+                        content.appendChild(mainList);
+                    } else {
+                        const list = document.createElement("ul");
+                        list.className = "space-y-2";
+                        category.options.forEach((option) => {
+                            const listItem = document.createElement("li");
+                            const checkboxId = `${categoryId}:${option.value}`;
+                            listItem.innerHTML = `<label for="${checkboxId}" class="flex items-center space-x-2 text-sm text-gray-800 cursor-pointer group" data-tooltip-img="${option.image || ""
+                                }" data-tooltip-text="${option.label
+                                }"><input type="checkbox" id="${checkboxId}" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"><span>${option.label
+                                }</span></label>`;
+                            list.appendChild(listItem);
+                        });
+                        content.appendChild(list);
+                    }
 
-                    content.appendChild(list);
                     accordion.appendChild(button);
                     accordion.appendChild(content);
                     filterAccordions.appendChild(accordion);
 
-                    button.addEventListener('click', () => {
-                        const isExpanded = button.getAttribute('aria-expanded') === 'true';
-                        button.setAttribute('aria-expanded', !isExpanded);
-                        content.classList.toggle('hidden');
-                        button.querySelector('svg').classList.toggle('rotate-180');
+                    button.addEventListener("click", () => {
+                        const isExpanded =
+                            button.getAttribute("aria-expanded") === "true";
+                        button.setAttribute("aria-expanded", !isExpanded);
+                        content.classList.toggle("hidden");
+                        button.querySelector("svg").classList.toggle("rotate-180");
                     });
                 });
 
-                document.querySelectorAll('#filter-accordions input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.addEventListener('change', applyFilters);
-                });
+                document
+                    .querySelectorAll('#filter-accordions input[type="checkbox"]')
+                    .forEach((checkbox) =>
+                        checkbox.addEventListener("change", () => {
+                            // O evento de 'change' nos filhos agora dispara a lógica de grupo, que por sua vez chama applyFilters
+                            if (
+                                !checkbox.dataset.formatGroup &&
+                                !checkbox.dataset.formatMember
+                            ) {
+                                applyFilters();
+                            }
+                        })
+                    );
 
                 setupTooltips();
+                setupGroupedCheckboxes();
+            }
+
+            function setupGroupedCheckboxes() {
+                document
+                    .querySelectorAll("input[data-format-group]")
+                    .forEach((groupCheckbox) => {
+                        groupCheckbox.addEventListener("change", (e) => {
+                            const slug = e.target.dataset.formatGroup;
+                            const isChecked = e.target.checked;
+                            document
+                                .querySelectorAll(`input[data-format-member="${slug}"]`)
+                                .forEach((memberCheckbox) => {
+                                    memberCheckbox.checked = isChecked;
+                                });
+                            applyFilters(); // Chama o filtro após a ação do grupo
+                        });
+                    });
+
+                document
+                    .querySelectorAll("input[data-format-member]")
+                    .forEach((memberCheckbox) => {
+                        memberCheckbox.addEventListener("change", (e) => {
+                            const slug = e.target.dataset.formatMember;
+                            const groupCheckbox = document.querySelector(
+                                `input[data-format-group="${slug}"]`
+                            );
+                            const allMembers = document.querySelectorAll(
+                                `input[data-format-member="${slug}"]`
+                            );
+                            const checkedMembers = document.querySelectorAll(
+                                `input[data-format-member="${slug}"]:checked`
+                            );
+
+                            if (checkedMembers.length === 0) {
+                                groupCheckbox.checked = false;
+                                groupCheckbox.indeterminate = false;
+                            } else if (checkedMembers.length === allMembers.length) {
+                                groupCheckbox.checked = true;
+                                groupCheckbox.indeterminate = false;
+                            } else {
+                                groupCheckbox.indeterminate = true;
+                            }
+                            applyFilters(); // Chama o filtro após a ação de um membro
+                        });
+                    });
             }
 
             function setupTooltips() {
-                const tooltip = document.getElementById('filter-tooltip');
-                const tooltipImg = document.getElementById('tooltip-img');
-                const tooltipText = document.getElementById('tooltip-text');
-
-                document.querySelectorAll('label[data-tooltip-img]').forEach(label => {
-                    label.addEventListener('mouseenter', (e) => {
-                        const imgUrl = e.currentTarget.dataset.tooltipImg;
-                        const text = e.currentTarget.dataset.tooltipText;
-                        if (imgUrl) {
-                            tooltipImg.src = imgUrl;
-                            tooltipImg.style.display = 'block';
-                            tooltipText.textContent = text;
-                            tooltip.style.display = 'block';
-                        }
+                const tooltip = document.getElementById("filter-tooltip");
+                const tooltipImg = document.getElementById("tooltip-img");
+                const tooltipText = document.getElementById("tooltip-text");
+                document
+                    .querySelectorAll("label[data-tooltip-img]")
+                    .forEach((label) => {
+                        label.addEventListener("mouseenter", (e) => {
+                            const imgUrl = e.currentTarget.dataset.tooltipImg;
+                            const text = e.currentTarget.dataset.tooltipText;
+                            if (imgUrl) {
+                                tooltipImg.src = imgUrl;
+                                tooltipImg.style.display = "block";
+                                tooltipText.textContent = text;
+                                tooltip.style.display = "block";
+                            }
+                        });
+                        label.addEventListener("mousemove", (e) => {
+                            tooltip.style.left = `${e.pageX + 15}px`;
+                            tooltip.style.top = `${e.pageY + 15}px`;
+                        });
+                        label.addEventListener("mouseleave", () => {
+                            tooltip.style.display = "none";
+                        });
                     });
-
-                    label.addEventListener('mousemove', (e) => {
-                        tooltip.style.left = `${e.pageX + 15}px`;
-                        tooltip.style.top = `${e.pageY + 15}px`;
-                    });
-
-                    label.addEventListener('mouseleave', () => {
-                        tooltip.style.display = 'none';
-                    });
-                });
             }
 
-            document.getElementById('clear-filters').addEventListener('click', () => {
-                document.querySelectorAll('#filter-accordions input[type="checkbox"]:checked').forEach(checkbox => {
-                    checkbox.checked = false;
+            document
+                .getElementById("clear-filters")
+                .addEventListener("click", () => {
+                    document
+                        .querySelectorAll(
+                            '#filter-accordions input[type="checkbox"]:checked'
+                        )
+                        .forEach((checkbox) => (checkbox.checked = false));
+                    document
+                        .querySelectorAll("input[data-format-group]")
+                        .forEach((group) => (group.indeterminate = false));
+                    applyFilters();
                 });
-                applyFilters();
-            });
 
-            const filterPanel = document.getElementById('filter-panel');
-            const openBtn = document.getElementById('open-filters-btn');
-            const closeBtn = document.getElementById('close-filters-btn');
-
-            openBtn.addEventListener('click', () => filterPanel.classList.remove('-translate-x-full'));
-            closeBtn.addEventListener('click', () => filterPanel.classList.add('-translate-x-full'));
+            const filterPanel = document.getElementById("filter-panel");
+            const openBtn = document.getElementById("open-filters-btn");
+            const closeBtn = document.getElementById("close-filters-btn");
+            openBtn.addEventListener("click", () =>
+                filterPanel.classList.remove("-translate-x-full")
+            );
+            closeBtn.addEventListener("click", () =>
+                filterPanel.classList.add("-translate-x-full")
+            );
 
             createFilterUI();
             applyFilters();
-            geoJsonLayer = L.geoJson(geoJsonData, { style: styleGeoJSON, onEachFeature: onEachFeature }).addTo(map);
+            geoJsonLayer = L.geoJson(geoJsonData, {
+                style: styleGeoJSON,
+                onEachFeature: onEachFeature,
+            }).addTo(map);
         });
 
         async function loadGeoJsonData() {
             try {
-                const response = await fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json');
+                const response = await fetch(
+                    "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json"
+                );
                 const data = await response.json();
-
-                data.features.forEach(feature => {
+                data.features.forEach((feature) => {
                     feature.properties.iso_a2 = mapCountryCode(feature.id);
                     feature.properties.name = feature.properties.name;
                 });
@@ -450,287 +567,1728 @@
 
         function mapCountryCode(iso_a3) {
             const map = {
-                'AFG': 'AF', 'ALB': 'AL', 'DZA': 'DZ', 'ASM': 'AS', 'AND': 'AD', 'AGO': 'AO', 'AIA': 'AI',
-                'ATA': 'AQ', 'ATG': 'AG', 'ARG': 'AR', 'ARM': 'AM', 'ABW': 'AW', 'AUS': 'AU', 'AUT': 'AT',
-                'AZE': 'AZ', 'BHS': 'BS', 'BHR': 'BH', 'BGD': 'BD', 'BRB': 'BB', 'BLR': 'BY', 'BEL': 'BE',
-                'BLZ': 'BZ', 'BEN': 'BJ', 'BMU': 'BM', 'BTN': 'BT', 'BOL': 'BO', 'BES': 'BQ', 'BIH': 'BA',
-                'BWA': 'BW', 'BVT': 'BV', 'BRA': 'BR', 'IOT': 'IO', 'BRN': 'BN', 'BGR': 'BG', 'BFA': 'BF',
-                'BDI': 'BI', 'CPV': 'CV', 'KHM': 'KH', 'CMR': 'CM', 'CAN': 'CA', 'CYM': 'KY', 'CAF': 'CF',
-                'TCD': 'TD', 'CHL': 'CL', 'CHN': 'CN', 'CXR': 'CX', 'CCK': 'CC', 'COL': 'CO', 'COM': 'KM',
-                'COD': 'CD', 'COG': 'CG', 'COK': 'CK', 'CRI': 'CR', 'CIV': 'CI', 'HRV': 'HR', 'CUB': 'CU',
-                'CUW': 'CW', 'CYP': 'CY', 'CZE': 'CZ', 'DNK': 'DK', 'DJI': 'DJ', 'DMA': 'DM', 'DOM': 'DO',
-                'ECU': 'EC', 'EGY': 'EG', 'SLV': 'SV', 'GNQ': 'GQ', 'ERI': 'ER', 'EST': 'EE', 'SWZ': 'SZ',
-                'ETH': 'ET', 'FLK': 'FK', 'FRO': 'FO', 'FJI': 'FJ', 'FIN': 'FI', 'FRA': 'FR', 'GUF': 'GF',
-                'PYF': 'PF', 'ATF': 'TF', 'GAB': 'GA', 'GMB': 'GM', 'GEO': 'GE', 'DEU': 'DE', 'GHA': 'GH',
-                'GIB': 'GI', 'GRC': 'GR', 'GRL': 'GL', 'GRD': 'GD', 'GLP': 'GP', 'GUM': 'GU', 'GTM': 'GT',
-                'GGY': 'GG', 'GIN': 'GN', 'GNB': 'GW', 'GUY': 'GY', 'HTI': 'HT', 'HMD': 'HM', 'VAT': 'VA',
-                'HND': 'HN', 'HKG': 'HK', 'HUN': 'HU', 'ISL': 'IS', 'IND': 'IN', 'IDN': 'ID', 'IRN': 'IR',
-                'IRQ': 'IQ', 'IRL': 'IE', 'IMN': 'IM', 'ISR': 'IL', 'ITA': 'IT', 'JAM': 'JM', 'JPN': 'JP',
-                'JEY': 'JE', 'JOR': 'JO', 'KAZ': 'KZ', 'KEN': 'KE', 'KIR': 'KI', 'PRK': 'KP', 'KOR': 'KR',
-                'KWT': 'KW', 'KGZ': 'KG', 'LAO': 'LA', 'LVA': 'LV', 'LBN': 'LB', 'LSO': 'LS', 'LBR': 'LR',
-                'LBY': 'LY', 'LIE': 'LI', 'LTU': 'LT', 'LUX': 'LU', 'MAC': 'MO', 'MKD': 'MK', 'MDG': 'MG',
-                'MWI': 'MW', 'MYS': 'MY', 'MDV': 'MV', 'MLI': 'ML', 'MLT': 'MT', 'MHL': 'MH', 'MTQ': 'MQ',
-                'MRT': 'MR', 'MUS': 'MU', 'MYT': 'YT', 'MEX': 'MX', 'FSM': 'FM', 'MDA': 'MD', 'MCO': 'MC',
-                'MNG': 'MN', 'MNE': 'ME', 'MSR': 'MS', 'MAR': 'MA', 'MOZ': 'MZ', 'MMR': 'MM', 'NAM': 'NA',
-                'NRU': 'NR', 'NPL': 'NP', 'NLD': 'NL', 'NCL': 'NC', 'NZL': 'NZ', 'NIC': 'NI', 'NER': 'NE',
-                'NGA': 'NG', 'NIU': 'NU', 'NFK': 'NF', 'MNP': 'MP', 'NOR': 'NO', 'OMN': 'OM', 'PAK': 'PK',
-                'PLW': 'PW', 'PSE': 'PS', 'PAN': 'PA', 'PNG': 'PG', 'PRY': 'PY', 'PER': 'PE', 'PHL': 'PH',
-                'PCN': 'PN', 'POL': 'PL', 'PRT': 'PT', 'PRI': 'PR', 'QAT': 'QA', 'REU': 'RE', 'ROU': 'RO',
-                'RUS': 'RU', 'RWA': 'RW', 'BLM': 'BL', 'SHN': 'SH', 'KNA': 'KN', 'LCA': 'LC', 'MAF': 'MF',
-                'SPM': 'PM', 'VCT': 'VC', 'WSM': 'WS', 'SMR': 'SM', 'STP': 'ST', 'SAU': 'SA', 'SEN': 'SN',
-                'SRB': 'RS', 'SYC': 'SC', 'SLE': 'SL', 'SGP': 'SG', 'SXM': 'SX', 'SVK': 'SK', 'SVN': 'SI',
-                'SLB': 'SB', 'SOM': 'SO', 'ZAF': 'ZA', 'SGS': 'GS', 'SSD': 'SS', 'ESP': 'ES', 'LKA': 'LK',
-                'SDN': 'SD', 'SUR': 'SR', 'SJM': 'SJ', 'SWE': 'SE', 'CHE': 'CH', 'SYR': 'SY', 'TWN': 'TW',
-                'TJK': 'TJ', 'TZA': 'TZ', 'THA': 'TH', 'TLS': 'TL', 'TGO': 'TG', 'TKL': 'TK', 'TON': 'TO',
-                'TTO': 'TT', 'TUN': 'TN', 'TUR': 'TR', 'TKM': 'TM', 'TCA': 'TC', 'TUV': 'TV', 'UGA': 'UG',
-                'UKR': 'UA', 'ARE': 'AE', 'GBR': 'GB', 'USA': 'US', 'UMI': 'UM', 'URY': 'UY', 'UZB': 'UZ',
-                'VUT': 'VU', 'VEN': 'VE', 'VNM': 'VN', 'VGB': 'VG', 'VIR': 'VI', 'WLF': 'WF', 'ESH': 'EH',
-                'YEM': 'YE', 'ZMB': 'ZM', 'ZWE': 'ZW', 'ALA': 'AX',
+                AFG: "AF",
+                ALB: "AL",
+                DZA: "DZ",
+                ASM: "AS",
+                AND: "AD",
+                AGO: "AO",
+                AIA: "AI",
+                ATA: "AQ",
+                ATG: "AG",
+                ARG: "AR",
+                ARM: "AM",
+                ABW: "AW",
+                AUS: "AU",
+                AUT: "AT",
+                AZE: "AZ",
+                BHS: "BS",
+                BHR: "BH",
+                BGD: "BD",
+                BRB: "BB",
+                BLR: "BY",
+                BEL: "BE",
+                BLZ: "BZ",
+                BEN: "BJ",
+                BMU: "BM",
+                BTN: "BT",
+                BOL: "BO",
+                BES: "BQ",
+                BIH: "BA",
+                BWA: "BW",
+                BVT: "BV",
+                BRA: "BR",
+                IOT: "IO",
+                BRN: "BN",
+                BGR: "BG",
+                BFA: "BF",
+                BDI: "BI",
+                CPV: "CV",
+                KHM: "KH",
+                CMR: "CM",
+                CAN: "CA",
+                CYM: "KY",
+                CAF: "CF",
+                TCD: "TD",
+                CHL: "CL",
+                CHN: "CN",
+                CXR: "CX",
+                CCK: "CC",
+                COL: "CO",
+                COM: "KM",
+                COD: "CD",
+                COG: "CG",
+                COK: "CK",
+                CRI: "CR",
+                CIV: "CI",
+                HRV: "HR",
+                CUB: "CU",
+                CUW: "CW",
+                CYP: "CY",
+                CZE: "CZ",
+                DNK: "DK",
+                DJI: "DJ",
+                DMA: "DM",
+                DOM: "DO",
+                ECU: "EC",
+                EGY: "EG",
+                SLV: "SV",
+                GNQ: "GQ",
+                ERI: "ER",
+                EST: "EE",
+                SWZ: "SZ",
+                ETH: "ET",
+                FLK: "FK",
+                FRO: "FO",
+                FJI: "FJ",
+                FIN: "FI",
+                FRA: "FR",
+                GUF: "GF",
+                PYF: "PF",
+                ATF: "TF",
+                GAB: "GA",
+                GMB: "GM",
+                GEO: "GE",
+                DEU: "DE",
+                GHA: "GH",
+                GIB: "GI",
+                GRC: "GR",
+                GRL: "GL",
+                GRD: "GD",
+                GLP: "GP",
+                GUM: "GU",
+                GTM: "GT",
+                GGY: "GG",
+                GIN: "GN",
+                GNB: "GW",
+                GUY: "GY",
+                HTI: "HT",
+                HMD: "HM",
+                VAT: "VA",
+                HND: "HN",
+                HKG: "HK",
+                HUN: "HU",
+                ISL: "IS",
+                IND: "IN",
+                IDN: "ID",
+                IRN: "IR",
+                IRQ: "IQ",
+                IRL: "IE",
+                IMN: "IM",
+                ISR: "IL",
+                ITA: "IT",
+                JAM: "JM",
+                JPN: "JP",
+                JEY: "JE",
+                JOR: "JO",
+                KAZ: "KZ",
+                KEN: "KE",
+                KIR: "KI",
+                PRK: "KP",
+                KOR: "KR",
+                KWT: "KW",
+                KGZ: "KG",
+                LAO: "LA",
+                LVA: "LV",
+                LBN: "LB",
+                LSO: "LS",
+                LBR: "LR",
+                LBY: "LY",
+                LIE: "LI",
+                LTU: "LT",
+                LUX: "LU",
+                MAC: "MO",
+                MKD: "MK",
+                MDG: "MG",
+                MWI: "MW",
+                MYS: "MY",
+                MDV: "MV",
+                MLI: "ML",
+                MLT: "MT",
+                MHL: "MH",
+                MTQ: "MQ",
+                MRT: "MR",
+                MUS: "MU",
+                MYT: "YT",
+                MEX: "MX",
+                FSM: "FM",
+                MDA: "MD",
+                MCO: "MC",
+                MNG: "MN",
+                MNE: "ME",
+                MSR: "MS",
+                MAR: "MA",
+                MOZ: "MZ",
+                MMR: "MM",
+                NAM: "NA",
+                NRU: "NR",
+                NPL: "NP",
+                NLD: "NL",
+                NCL: "NC",
+                NZL: "NZ",
+                NIC: "NI",
+                NER: "NE",
+                NGA: "NG",
+                NIU: "NU",
+                NFK: "NF",
+                MNP: "MP",
+                NOR: "NO",
+                OMN: "OM",
+                PAK: "PK",
+                PLW: "PW",
+                PSE: "PS",
+                PAN: "PA",
+                PNG: "PG",
+                PRY: "PY",
+                PER: "PE",
+                PHL: "PH",
+                PCN: "PN",
+                POL: "PL",
+                PRT: "PT",
+                PRI: "PR",
+                QAT: "QA",
+                REU: "RE",
+                ROU: "RO",
+                RUS: "RU",
+                RWA: "RW",
+                BLM: "BL",
+                SHN: "SH",
+                KNA: "KN",
+                LCA: "LC",
+                MAF: "MF",
+                SPM: "PM",
+                VCT: "VC",
+                WSM: "WS",
+                SMR: "SM",
+                STP: "ST",
+                SAU: "SA",
+                SEN: "SN",
+                SRB: "RS",
+                SYC: "SC",
+                SLE: "SL",
+                SGP: "SG",
+                SXM: "SX",
+                SVK: "SK",
+                SVN: "SI",
+                SLB: "SB",
+                SOM: "SO",
+                ZAF: "ZA",
+                SGS: "GS",
+                SSD: "SS",
+                ESP: "ES",
+                LKA: "LK",
+                SDN: "SD",
+                SUR: "SR",
+                SJM: "SJ",
+                SWE: "SE",
+                CHE: "CH",
+                SYR: "SY",
+                TWN: "TW",
+                TJK: "TJ",
+                TZA: "TZ",
+                THA: "TH",
+                TLS: "TL",
+                TGO: "TG",
+                TKL: "TK",
+                TON: "TO",
+                TTO: "TT",
+                TUN: "TN",
+                TUR: "TR",
+                TKM: "TM",
+                TCA: "TC",
+                TUV: "TV",
+                UGA: "UG",
+                UKR: "UA",
+                ARE: "AE",
+                GBR: "GB",
+                USA: "US",
+                UMI: "UM",
+                URY: "UY",
+                UZB: "UZ",
+                VUT: "VU",
+                VEN: "VE",
+                VNM: "VN",
+                VGB: "VG",
+                VIR: "VI",
+                WLF: "WF",
+                ESH: "EH",
+                YEM: "YE",
+                ZMB: "ZM",
+                ZWE: "ZW",
+                ALA: "AX",
             };
             return map[iso_a3] || null;
         }
 
         function populateData() {
-            const placeholder = (text, w = 300, h = 200) => `https://placehold.co/${w}x${h}/e2e8f0/64748b?text=${encodeURIComponent(text)}`;
+            const placeholder = (text, w = 300, h = 200) =>
+                `https://placehold.co/${w}x${h}/e2e8f0/64748b?text=${encodeURIComponent(
+                    text
+                )}`;
 
             const fullFilterOptions = {
-                "driving": {
-                    "label": "Condução e Tráfego",
-                    "options": [
-                        { "value": "left", "label": "Condução pela Esquerda", "image": placeholder("Condução à Esquerda") },
-                        { "value": "right", "label": "Condução pela Direita", "image": placeholder("Condução à Direita") }
-                    ]
+                driving: {
+                    label: "Condução e Tráfego",
+                    options: [
+                        {
+                            value: "left",
+                            label: "Condução pela Esquerda",
+                            image: placeholder("Condução à Esquerda"),
+                        },
+                        {
+                            value: "right",
+                            label: "Condução pela Direita",
+                            image: placeholder("Condução à Direita"),
+                        },
+                    ],
                 },
-                "license_plate": {
-                    "label": "Placas de Matrícula",
-                    "options": [
-                        { "value": "eu_strip", "label": "Faixa Azul Padrão UE", "image": placeholder("Placa com Faixa UE") },
-                        { "value": "blue_strips_both_sides", "label": "Faixas Azuis nos Dois Lados (Itália/Albânia)", "image": placeholder("Placa com Faixas Azuis") },
-                        { "value": "yellow_rear", "label": "Placa Traseira Amarela (Reino Unido)", "image": placeholder("Placa Traseira Amarela") },
-                        { "value": "yellow_both", "label": "Ambas as Placas Amarelas (Países Baixos)", "image": placeholder("Ambas Placas Amarelas") },
-                        { "value": "red_text", "label": "Texto Vermelho (Bélgica)", "image": placeholder("Placa com Texto Vermelho") },
-                        { "value": "black_plate_white_text", "label": "Placa Preta, Texto Branco (Indonésia)", "image": placeholder("Placa Preta") },
-                        { "value": "uruguay_style", "label": "Placa do Uruguai (Borda Preta)", "image": placeholder("Placa do Uruguai") },
-                        { "value": "israel_style", "label": "Placa de Israel (Quadrada, Faixa Azul)", "image": placeholder("Placa de Israel") }
-                    ]
+                license_plate: {
+                    label: "Placas de Matrícula",
+                    options: [
+                        {
+                            value: "eu_strip",
+                            label: "Faixa Azul Padrão UE",
+                            image: placeholder("Placa com Faixa UE"),
+                        },
+                        {
+                            value: "blue_strips_both_sides",
+                            label: "Faixas Azuis nos Dois Lados (Itália/Albânia)",
+                            image: placeholder("Placa com Faixas Azuis"),
+                        },
+                        {
+                            value: "yellow_rear",
+                            label: "Placa Traseira Amarela (Reino Unido)",
+                            image: placeholder("Placa Traseira Amarela"),
+                        },
+                        {
+                            value: "yellow_both",
+                            label: "Ambas as Placas Amarelas (Países Baixos)",
+                            image: placeholder("Ambas Placas Amarelas"),
+                        },
+                        {
+                            value: "red_text",
+                            label: "Texto Vermelho (Bélgica)",
+                            image: placeholder("Placa com Texto Vermelho"),
+                        },
+                        {
+                            value: "black_plate_white_text",
+                            label: "Placa Preta, Texto Branco (Indonésia)",
+                            image: placeholder("Placa Preta"),
+                        },
+                        {
+                            value: "uruguay_style",
+                            label: "Placa do Uruguai (Borda Preta)",
+                            image: placeholder("Placa do Uruguai"),
+                        },
+                        {
+                            value: "israel_style",
+                            label: "Placa de Israel (Quadrada, Faixa Azul)",
+                            image: placeholder("Placa de Israel"),
+                        },
+                    ],
                 },
-                "bollards": {
-                    "label": "Bollards (Balizadores)",
-                    "options": [
-                        { "value": "es", "label": "Espanha (Preto/Branco com Retângulo Amarelo)", "image": placeholder("Bollard Espanhol") },
-                        { "value": "is", "label": "Islândia (Amarelo)", "image": placeholder("Bollard Islandês") },
-                        { "value": "au", "label": "Austrália (Pequeno Retângulo Vermelho)", "image": placeholder("Bollard Australiano") },
-                        { "value": "nz", "label": "Nova Zelândia (Grande Área Vermelha)", "image": placeholder("Bollard Neozelandês") },
-                        { "value": "th", "label": "Tailândia (Obelisco Preto/Branco)", "image": placeholder("Bollard Tailandês") },
-                        { "value": "my", "label": "Malásia (Dois Retângulos Vermelhos)", "image": placeholder("Bollard Malaio") },
-                        { "value": "pe", "label": "Peru ('Cigarro')", "image": placeholder("Bollard Peruano") },
-                        { "value": "fr", "label": "França (Branco com Topo Vermelho)", "image": placeholder("Bollard Francês") },
-                        { "value": "pl", "label": "Polónia (Listras Vermelhas/Brancas)", "image": placeholder("Bollard Polonês") },
-                        { "value": "dk", "label": "Dinamarca (Preto com Topo Refletivo Vermelho)", "image": placeholder("Bollard Dinamarquês") },
-                        { "value": "cz_sk", "label": "Chéquia/Eslováquia (Listras Pretas/Brancas)", "image": placeholder("Bollard Checo") },
-                    ]
+                bollards: {
+                    label: "Balizadores",
+                    type: "nested",
+                    formats: {
+                        "Poste Fino/Redondo": [
+                            {
+                                value: "no_bollard",
+                                label: "Noruega (Preto c/ faixa vermelha)",
+                                image: placeholder("Balizador Norueguês"),
+                            },
+                            {
+                                value: "fi_bollard",
+                                label: "Finlândia (Amarelo c/ topo preto)",
+                                image: placeholder("Balizador Finlandês"),
+                            },
+                            {
+                                value: "jp_bollard",
+                                label: "Japão (Vermelho fino c/ setas)",
+                                image: placeholder("Balizador Japonês"),
+                            },
+                        ],
+                        "Retangular/Quadrado": [
+                            {
+                                value: "es_bollard",
+                                label: "Espanha (Preto/Branco c/ retângulo amarelo)",
+                                image: placeholder("Balizador Espanhol"),
+                            },
+                            {
+                                value: "it_bollard",
+                                label: "Itália (Preto c/ faixa amarela)",
+                                image: placeholder("Balizador Italiano"),
+                            },
+                            {
+                                value: "au_bollard",
+                                label: "Austrália (Pequeno retângulo vermelho)",
+                                image: placeholder("Balizador Australiano"),
+                            },
+                            {
+                                value: "nz_bollard",
+                                label: "Nova Zelândia (Grande área vermelha)",
+                                image: placeholder("Balizador Neozelandês"),
+                            },
+                            {
+                                value: "my_bollard",
+                                label: "Malásia (Dois retângulos vermelhos)",
+                                image: placeholder("Balizador Malaio"),
+                            },
+                        ],
+                        "Plástico/Flexível": [
+                            {
+                                value: "is_bollard",
+                                label: "Islândia (Amarelo)",
+                                image: placeholder("Balizador Islandês"),
+                            },
+                            {
+                                value: "ch_bollard",
+                                label: "Suíça (Branco c/ topo preto)",
+                                image: placeholder("Balizador Suíço"),
+                            },
+                        ],
+                        "Obelisco/Cimento": [
+                            {
+                                value: "th_bollard",
+                                label: "Tailândia (Obelisco preto/branco)",
+                                image: placeholder("Balizador Tailandês"),
+                            },
+                            {
+                                value: "pe_bollard",
+                                label: "Peru ('Cigarro')",
+                                image: placeholder("Balizador Peruano"),
+                            },
+                            {
+                                value: "ar_bollard",
+                                label: "Argentina (Cimento c/ faixas diagonais)",
+                                image: placeholder("Balizador Argentino"),
+                            },
+                        ],
+                        "Listrado/Colorido": [
+                            {
+                                value: "fr_bollard",
+                                label: "França (Branco c/ topo vermelho)",
+                                image: placeholder("Balizador Francês"),
+                            },
+                            {
+                                value: "pl_bollard",
+                                label: "Polónia (Listras vermelhas/brancas)",
+                                image: placeholder("Balizador Polonês"),
+                            },
+                            {
+                                value: "dk_bollard",
+                                label: "Dinamarca (Preto c/ topo refletor)",
+                                image: placeholder("Balizador Dinamarquês"),
+                            },
+                            {
+                                value: "cz_sk_bollard",
+                                label: "Chéquia/Eslováquia (Listras pretas/brancas)",
+                                image: placeholder("Balizador Checo"),
+                            },
+                        ],
+                    },
                 },
-                "road_lines_full": {
-                    "label": "Faixas da Estrada combinacao",
-                    "options": [
-                        { "value": "white_yellow", "label": "Lateral Branca, Central Amarela", "image": placeholder("Lateral Branca\nCentral Amarela") },
-                        { "value": "white_white", "label": "Lateral Branca, Central Branca", "image": "https://fabiencelier.github.io/geoguessr-tips/resources/img/road-lines/road-lines-norway-02.png" },
-                        { "value": "double_yellow_white", "label": "Lateral Dupla Amarela, Central Branca", "image": placeholder("Lateral Dupla Amarela\nCentral Branca") },
-                        { "value": "yellow_white", "label": "Lateral Amarela, Central Branca", "image": placeholder("Lateral Amarela\nCentral Branca") },
-                        { "value": "yellow_yellow", "label": "Lateral Amarela, Central Amarela", "image": placeholder("Lateral Amarela\nCentral Amarela") },
-                        { "value": "white_yellow-white-yellow", "label": "Lateral Branca, Central Amarela-Branca-Amarela", "image": placeholder("Combinação Turquia") }
-                    ]
+                road_lines_full: {
+                    label: "Faixas da Estrada combinacao",
+                    options: [
+                        {
+                            value: "white_yellow",
+                            label: "Lateral Branca, Central Amarela",
+                            image: placeholder("Lateral Branca\nCentral Amarela"),
+                        },
+                        {
+                            value: "white_white",
+                            label: "Lateral Branca, Central Branca",
+                            image:
+                                "https://fabiencelier.github.io/geoguessr-tips/resources/img/road-lines/road-lines-norway-02.png",
+                        },
+                        {
+                            value: "double_yellow_white",
+                            label: "Lateral Dupla Amarela, Central Branca",
+                            image: placeholder("Lateral Dupla Amarela\nCentral Branca"),
+                        },
+                        {
+                            value: "yellow_white",
+                            label: "Lateral Amarela, Central Branca",
+                            image: placeholder("Lateral Amarela\nCentral Branca"),
+                        },
+                        {
+                            value: "yellow_yellow",
+                            label: "Lateral Amarela, Central Amarela",
+                            image: placeholder("Lateral Amarela\nCentral Amarela"),
+                        },
+                        {
+                            value: "white_yellow-white-yellow",
+                            label: "Lateral Branca, Central Amarela-Branca-Amarela",
+                            image: placeholder("Combinação Turquia"),
+                        },
+                    ],
                 },
-                "utility_poles": {
-                    "label": "Postes",
-                    "options": [
-                        { "value": "fr_blue", "label": "Retângulos Azuis (França)", "image": placeholder("Poste Francês") },
-                        { "value": "ua_ru_white_base", "label": "Base Branca (Ucrânia/Rússia)", "image": placeholder("Poste com Base Branca") },
-                        { "value": "mx_octagonal", "label": "Octogonal (México)", "image": placeholder("Poste Mexicano") },
-                        { "value": "ro_holes", "label": "Concreto com Buracos (Roménia)", "image": placeholder("Poste Romeno") },
-                        { "value": "jp_double", "label": "Postes Duplos com Muitos Fios (Japão)", "image": placeholder("Postes Japoneses") },
-                    ]
+                utility_poles: {
+                    label: "Postes",
+                    options: [
+                        {
+                            value: "fr_blue",
+                            label: "Retângulos Azuis (França)",
+                            image: placeholder("Poste Francês"),
+                        },
+                        {
+                            value: "ua_ru_white_base",
+                            label: "Base Branca (Ucrânia/Rússia)",
+                            image: placeholder("Poste com Base Branca"),
+                        },
+                        {
+                            value: "mx_octagonal",
+                            label: "Octogonal (México)",
+                            image: placeholder("Poste Mexicano"),
+                        },
+                        {
+                            value: "ro_holes",
+                            label: "Concreto com Buracos (Roménia)",
+                            image: placeholder("Poste Romeno"),
+                        },
+                        {
+                            value: "jp_double",
+                            label: "Postes Duplos com Muitos Fios (Japão)",
+                            image: placeholder("Postes Japoneses"),
+                        },
+                    ],
                 },
-                "google_car": {
-                    "label": "Meta do Veículo Google",
-                    "options": [
-                        { "value": "ke_snorkel", "label": "Snorkel (Quénia)", "image": placeholder("Carro com Snorkel") },
-                        { "value": "mn_snorkel_roof", "label": "Snorkel e Equipamento (Mongólia)", "image": placeholder("Carro da Mongólia") },
-                        { "value": "gh_tape", "label": "Fita Preta nas Barras (Gana)", "image": placeholder("Carro de Gana") },
-                        { "value": "ng_police", "label": "Escolta Policial (Nigéria)", "image": placeholder("Carro da Nigéria") },
-                        { "value": "gt_mirrors", "label": "Espelhos e Barras Distintas (Guatemala)", "image": placeholder("Carro da Guatemala") },
-                        { "value": "jp_ch_low_cam", "label": "Câmara Baixa (Japão/Suíça)", "image": placeholder("Carro com Câmera Baixa") },
-                        { "value": "ua_red_car", "label": "Carro Vermelho (Ucrânia)", "image": placeholder("Carro Vermelho da Ucrânia") },
-                        { "value": "ru_black_car_antenna", "label": "Carro Preto com Antena (Rússia)", "image": placeholder("Carro da Rússia") },
-                        { "value": "lk_red_blur", "label": "Reflexo Vermelho (Sri Lanka)", "image": placeholder("Carro do Sri Lanka") },
-                        { "value": "bd_red_bars", "label": "Barras e Espelhos Vermelhos (Bangladesh)", "image": placeholder("Carro de Bangladesh") },
-                        { "value": "sn_sky_rift", "label": "Fendas no Céu (Senegal)", "image": placeholder("Céu do Senegal") },
-                    ]
+                google_car: {
+                    label: "Meta do Veículo Google",
+                    options: [
+                        {
+                            value: "ke_snorkel",
+                            label: "Snorkel (Quénia)",
+                            image: placeholder("Carro com Snorkel"),
+                        },
+                        {
+                            value: "mn_snorkel_roof",
+                            label: "Snorkel e Equipamento (Mongólia)",
+                            image: placeholder("Carro da Mongólia"),
+                        },
+                        {
+                            value: "gh_tape",
+                            label: "Fita Preta nas Barras (Gana)",
+                            image: placeholder("Carro de Gana"),
+                        },
+                        {
+                            value: "ng_police",
+                            label: "Escolta Policial (Nigéria)",
+                            image: placeholder("Carro da Nigéria"),
+                        },
+                        {
+                            value: "gt_mirrors",
+                            label: "Espelhos e Barras Distintas (Guatemala)",
+                            image: placeholder("Carro da Guatemala"),
+                        },
+                        {
+                            value: "jp_ch_low_cam",
+                            label: "Câmara Baixa (Japão/Suíça)",
+                            image: placeholder("Carro com Câmera Baixa"),
+                        },
+                        {
+                            value: "ua_red_car",
+                            label: "Carro Vermelho (Ucrânia)",
+                            image: placeholder("Carro Vermelho da Ucrânia"),
+                        },
+                        {
+                            value: "ru_black_car_antenna",
+                            label: "Carro Preto com Antena (Rússia)",
+                            image: placeholder("Carro da Rússia"),
+                        },
+                        {
+                            value: "lk_red_blur",
+                            label: "Reflexo Vermelho (Sri Lanka)",
+                            image: placeholder("Carro do Sri Lanka"),
+                        },
+                        {
+                            value: "bd_red_bars",
+                            label: "Barras e Espelhos Vermelhos (Bangladesh)",
+                            image: placeholder("Carro de Bangladesh"),
+                        },
+                        {
+                            value: "sn_sky_rift",
+                            label: "Fendas no Céu (Senegal)",
+                            image: placeholder("Céu do Senegal"),
+                        },
+                    ],
                 },
-                "scripts": {
-                    "label": "Alfabetos e Escritas",
-                    "options": [
-                        { "value": "cyrillic", "label": "Cirílico (й, ц, г, ш...)", "image": placeholder("Alfabeto Cirílico") },
-                        { "value": "greek", "label": "Grego (α, β, γ, δ...)", "image": placeholder("Alfabeto Grego") },
-                        { "value": "thai", "label": "Tailandês (ก, ข, ค, ง...)", "image": placeholder("Alfabeto Tailandês") },
-                        { "value": "lao", "label": "Laosiano (ກ, ຂ, ຄ...)", "image": placeholder("Escrita Laosiana") },
-                        { "value": "khmer", "label": "Khmer (ក, ខ, គ, ឃ...)", "image": placeholder("Alfabeto Khmer") },
-                        { "value": "sinhala", "label": "Sinhala (සිංහල)", "image": placeholder("Escrita Sinhala") },
-                        { "value": "hangul", "label": "Hangul (ㄱ, ㄴ, ㄷ, ㄹ...)", "image": placeholder("Alfabeto Coreano") },
-                        { "value": "japanese", "label": "Japonês (ひらがな, カタカナ, 漢字)", "image": placeholder("Escrita Japonesa") },
-                        { "value": "arabic", "label": "Árabe (ا, ب, ت, ث...)", "image": placeholder("Escrita Árabe") },
-                        { "value": "hebrew", "label": "Hebraico (א, ב, ג, ד...)", "image": placeholder("Escrita Hebraica") },
-                        { "value": "latin_diacritics", "label": "Latim com Diacríticos (ñ, ç, å, ö, ł, č, ş, ğ)", "image": placeholder("Letras com Diacríticos") },
-                    ]
+                scripts: {
+                    label: "Alfabetos e Escritas",
+                    options: [
+                        {
+                            value: "cyrillic",
+                            label: "Cirílico (й, ц, г, ш...)",
+                            image: placeholder("Alfabeto Cirílico"),
+                        },
+                        {
+                            value: "greek",
+                            label: "Grego (α, β, γ, δ...)",
+                            image: placeholder("Alfabeto Grego"),
+                        },
+                        {
+                            value: "thai",
+                            label: "Tailandês (ก, ข, ค, ง...)",
+                            image: placeholder("Alfabeto Tailandês"),
+                        },
+                        {
+                            value: "lao",
+                            label: "Laosiano (ກ, ຂ, ຄ...)",
+                            image: placeholder("Escrita Laosiana"),
+                        },
+                        {
+                            value: "khmer",
+                            label: "Khmer (ក, ខ, គ, ឃ...)",
+                            image: placeholder("Alfabeto Khmer"),
+                        },
+                        {
+                            value: "sinhala",
+                            label: "Sinhala (සිංහල)",
+                            image: placeholder("Escrita Sinhala"),
+                        },
+                        {
+                            value: "hangul",
+                            label: "Hangul (ㄱ, ㄴ, ㄷ, ㄹ...)",
+                            image: placeholder("Alfabeto Coreano"),
+                        },
+                        {
+                            value: "japanese",
+                            label: "Japonês (ひらがな, カタカナ, 漢字)",
+                            image: placeholder("Escrita Japonesa"),
+                        },
+                        {
+                            value: "arabic",
+                            label: "Árabe (ا, ب, ت, ث...)",
+                            image: placeholder("Escrita Árabe"),
+                        },
+                        {
+                            value: "hebrew",
+                            label: "Hebraico (א, ב, ג, ד...)",
+                            image: placeholder("Escrita Hebraica"),
+                        },
+                        {
+                            value: "latin_diacritics",
+                            label: "Latim com Diacríticos (ñ, ç, å, ö, ł, č, ş, ğ)",
+                            image: placeholder("Letras com Diacríticos"),
+                        },
+                    ],
                 },
-                "cctld": {
-                    "label": "Domínios de Topo (ccTLD)",
-                    "options": [
-                        { "value": ".ar", "label": ".ar (Argentina)" }, { "value": ".at", "label": ".at (Áustria)" }, { "value": ".au", "label": ".au (Austrália)" }, { "value": ".be", "label": ".be (Bélgica)" }, { "value": ".br", "label": ".br (Brasil)" }, { "value": ".ca", "label": ".ca (Canadá)" }, { "value": ".ch", "label": ".ch (Suíça)" }, { "value": ".cl", "label": ".cl (Chile)" }, { "value": ".co", "label": ".co (Colômbia)" }, { "value": ".cr", "label": ".cr (Costa Rica)" }, { "value": ".cz", "label": ".cz (Chéquia)" }, { "value": ".de", "label": ".de (Alemanha)" }, { "value": ".dk", "label": ".dk (Dinamarca)" }, { "value": ".ee", "label": ".ee (Estónia)" }, { "value": ".es", "label": ".es (Espanha)" }, { "value": ".fi", "label": ".fi (Finlândia)" }, { "value": ".fr", "label": ".fr (França)" }, { "value": ".gr", "label": ".gr (Grécia)" }, { "value": ".hr", "label": ".hr (Croácia)" }, { "value": ".hu", "label": ".hu (Hungria)" }, { "value": ".ie", "label": ".ie (Irlanda)" }, { "value": ".il", "label": ".il (Israel)" }, { "value": ".in", "label": ".in (Índia)" }, { "value": ".is", "label": ".is (Islândia)" }, { "value": ".it", "label": ".it (Itália)" }, { "value": ".jp", "label": ".jp (Japão)" }, { "value": ".ke", "label": ".ke (Quénia)" }, { "value": ".kr", "label": ".kr (Coreia do Sul)" }, { "value": ".lt", "label": ".lt (Lituânia)" }, { "value": ".lv", "label": ".lv (Letónia)" }, { "value": ".mx", "label": ".mx (México)" }, { "value": ".my", "label": ".my (Malásia)" }, { "value": ".nl", "label": ".nl (Países Baixos)" }, { "value": ".no", "label": ".no (Noruega)" }, { "value": ".nz", "label": ".nz (Nova Zelândia)" }, { "value": ".pl", "label": ".pl (Polónia)" }, { "value": ".pt", "label": ".pt (Portugal)" }, { "value": ".ro", "label": ".ro (Roménia)" }, { "value": ".ru", "label": ".ru (Rússia)" }, { "value": ".se", "label": ".se (Suécia)" }, { "value": ".sg", "label": ".sg (Singapura)" }, { "value": ".si", "label": ".si (Eslovénia)" }, { "value": ".sk", "label": ".sk (Eslováquia)" }, { "value": ".th", "label": ".th (Tailândia)" }, { "value": ".tr", "label": ".tr (Turquia)" }, { "value": ".ua", "label": ".ua (Ucrânia)" }, { "value": ".uk", "label": ".uk (Reino Unido)" }, { "value": ".us", "label": ".us (Estados Unidos)" }
-                    ]
-                }
+                cctld: {
+                    label: "Domínios de Topo (ccTLD)",
+                    options: [
+                        { value: ".ar", label: ".ar (Argentina)" },
+                        { value: ".at", label: ".at (Áustria)" },
+                        { value: ".au", label: ".au (Austrália)" },
+                        { value: ".be", label: ".be (Bélgica)" },
+                        { value: ".br", label: ".br (Brasil)" },
+                        { value: ".ca", label: ".ca (Canadá)" },
+                        { value: ".ch", label: ".ch (Suíça)" },
+                        { value: ".cl", label: ".cl (Chile)" },
+                        { value: ".co", label: ".co (Colômbia)" },
+                        { value: ".cr", label: ".cr (Costa Rica)" },
+                        { value: ".cz", label: ".cz (Chéquia)" },
+                        { value: ".de", label: ".de (Alemanha)" },
+                        { value: ".dk", label: ".dk (Dinamarca)" },
+                        { value: ".ee", label: ".ee (Estónia)" },
+                        { value: ".es", label: ".es (Espanha)" },
+                        { value: ".fi", label: ".fi (Finlândia)" },
+                        { value: ".fr", label: ".fr (França)" },
+                        { value: ".gr", label: ".gr (Grécia)" },
+                        { value: ".hr", label: ".hr (Croácia)" },
+                        { value: ".hu", label: ".hu (Hungria)" },
+                        { value: ".ie", label: ".ie (Irlanda)" },
+                        { value: ".il", label: ".il (Israel)" },
+                        { value: ".in", label: ".in (Índia)" },
+                        { value: ".is", label: ".is (Islândia)" },
+                        { value: ".it", label: ".it (Itália)" },
+                        { value: ".jp", label: ".jp (Japão)" },
+                        { value: ".ke", label: ".ke (Quénia)" },
+                        { value: ".kr", label: ".kr (Coreia do Sul)" },
+                        { value: ".lt", label: ".lt (Lituânia)" },
+                        { value: ".lv", label: ".lv (Letónia)" },
+                        { value: ".mx", label: ".mx (México)" },
+                        { value: ".my", label: ".my (Malásia)" },
+                        { value: ".nl", label: ".nl (Países Baixos)" },
+                        { value: ".no", label: ".no (Noruega)" },
+                        { value: ".nz", label: ".nz (Nova Zelândia)" },
+                        { value: ".pl", label: ".pl (Polónia)" },
+                        { value: ".pt", label: ".pt (Portugal)" },
+                        { value: ".ro", label: ".ro (Roménia)" },
+                        { value: ".ru", label: ".ru (Rússia)" },
+                        { value: ".se", label: ".se (Suécia)" },
+                        { value: ".sg", label: ".sg (Singapura)" },
+                        { value: ".si", label: ".si (Eslovénia)" },
+                        { value: ".sk", label: ".sk (Eslováquia)" },
+                        { value: ".th", label: ".th (Tailândia)" },
+                        { value: ".tr", label: ".tr (Turquia)" },
+                        { value: ".ua", label: ".ua (Ucrânia)" },
+                        { value: ".uk", label: ".uk (Reino Unido)" },
+                        { value: ".us", label: ".us (Estados Unidos)" },
+                    ],
+                },
             };
 
             const fullCountriesData = [
-                { iso_a2: "AI", name: "Anguila", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "AG", name: "Antígua e Barbuda", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "AU", name: "Austrália", attributes: { driving: "left", cctld: ".au", bollards: "au", road_lines_full: "white_white" } },
-                { iso_a2: "BS", name: "Bahamas", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "BD", name: "Bangladesh", attributes: { driving: "left", google_car: "bd_red_bars", road_lines_full: "white_white" } },
-                { iso_a2: "BB", name: "Barbados", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "BM", name: "Bermudas", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "BT", name: "Butão", attributes: { driving: "left", license_plate: "red_plate_white_text", road_lines_full: "white_white" } },
-                { iso_a2: "BW", name: "Botsuana", attributes: { driving: "left", road_lines_full: "yellow_white" } },
-                { iso_a2: "BN", name: "Brunei", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "CY", name: "Chipre", attributes: { driving: "left", license_plate: ["yellow_rear", "eu_strip"], scripts: "greek", road_lines_full: "white_white" } },
-                { iso_a2: "DM", name: "Dominica", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "VN", name: "Vietname", attributes: { road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "SZ", name: "Essuatíni", attributes: { driving: "left", road_lines_full: "yellow_white" } },
-                { iso_a2: "FJ", name: "Fiji", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "GD", name: "Granada", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "TW", name: "Taiwan", attributes: { road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "GY", name: "Guiana", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "HK", name: "Hong Kong", attributes: { driving: "left", road_lines_full: "double_yellow_white" } },
-                { iso_a2: "KY", name: "Ilhas Caimão", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "CK", name: "Ilhas Cook", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "FK", name: "Ilhas Malvinas", attributes: { driving: "left", road_lines_full: ["white_yellow", "white_white"] } },
-                { iso_a2: "SB", name: "Ilhas Salomão", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "VI", name: "Ilhas Virgens Americanas", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "CR", name: "Costa Rica", attributes: { google_car: "cr_white_car_roof_rack", road_lines_full: "white_yellow", bollards: "cr_yellow_black_striped", cctld: ".cr", driving: "right" } },
-                { iso_a2: "EC", name: "Equador", attributes: { road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "GL", name: "Groenlândia", attributes: { road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "MQ", name: "Martinica", attributes: { road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "PA", name: "Panamá", attributes: { road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "PY", name: "Paraguai", attributes: { road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "PR", name: "Porto Rico", attributes: { road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "DO", name: "República Dominicana", attributes: { road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "UY", name: "Uruguai", attributes: { road_lines_full: ["white_yellow", "white_white"], license_plate: "uruguay_style", driving: "right" } },
-                { iso_a2: "VG", name: "Ilhas Virgens Britânicas", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "IN", name: "Índia", attributes: { driving: "left", cctld: ".in", road_lines_full: "white_white" } },
-                { iso_a2: "ID", name: "Indonésia", attributes: { driving: "left", license_plate: "black_plate_white_text", road_lines_full: "white_white" } },
-                { iso_a2: "IE", name: "Irlanda", attributes: { driving: "left", cctld: ".ie", road_lines: "yellow_outer", road_lines_full: "white_white", license_plate: "eu_strip" } },
-                { iso_a2: "JM", name: "Jamaica", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "JP", name: "Japão", attributes: { driving: "left", cctld: ".jp", google_car: "jp_ch_low_cam", utility_poles: "jp_double", road_lines_full: "white_yellow", scripts: "japanese" } },
-                { iso_a2: "LS", name: "Lesoto", attributes: { driving: "left", road_lines_full: "yellow_white" } },
-                { iso_a2: "MO", name: "Macau", attributes: { driving: "left", road_lines_full: "double_yellow_white" } },
-                { iso_a2: "MY", name: "Malásia", attributes: { driving: "left", cctld: ".my", bollards: "my", road_lines_full: ["white_white", "white_yellow"] } },
-                { iso_a2: "MV", name: "Maldivas", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "MW", name: "Malawi", attributes: { driving: "left", road_lines_full: "yellow_white" } },
-                { iso_a2: "MT", name: "Malta", attributes: { driving: "left", road_lines_full: "white_white", license_plate: "eu_strip" } },
-                { iso_a2: "MU", name: "Maurícia", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "MZ", name: "Moçambique", attributes: { driving: "left", road_lines_full: "yellow_white" } },
-                { iso_a2: "MS", name: "Montserrat", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "NA", name: "Namíbia", attributes: { driving: "left", road_lines_full: "yellow_white" } },
-                { iso_a2: "NR", name: "Nauru", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "NP", name: "Nepal", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "NU", name: "Niue", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "NZ", name: "Nova Zelândia", attributes: { driving: "left", cctld: ".nz", bollards: "nz", road_lines_full: "white_white" } },
-                { iso_a2: "PK", name: "Paquistão", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "PG", name: "Papua-Nova Guiné", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "KE", name: "Quénia", attributes: { driving: "left", google_car: "ke_snorkel", license_plate: "yellow_rear", road_lines_full: "white_yellow", cctld: ".ke" } },
-                { iso_a2: "KI", name: "Quiribati", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "GB", name: "Reino Unido", attributes: { driving: "left", license_plate: "yellow_rear", cctld: ".uk", road_lines_full: "white_white" } },
-                { iso_a2: "WS", name: "Samoa", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "SH", name: "Santa Helena", attributes: { driving: "left", road_lines_full: ["white_yellow", "white_white"] } },
-                { iso_a2: "LC", name: "Santa Lúcia", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "KN", name: "São Cristóvão e Neves", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "VC", name: "São Vicente e Granadinas", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "SC", name: "Seicheles", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "SG", name: "Singapura", attributes: { driving: "left", cctld: ".sg", road_lines_full: "white_white" } },
-                { iso_a2: "LK", name: "Sri Lanka", attributes: { driving: "left", google_car: "lk_red_blur", road_lines_full: "white_white", scripts: "sinhala" } },
-                { iso_a2: "SR", name: "Suriname", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "ZA", name: "África do Sul", attributes: { driving: "left", road_lines: "yellow_outer", road_lines_full: "yellow_white" } },
-                { iso_a2: "TH", name: "Tailândia", attributes: { driving: "left", cctld: ".th", bollards: "th", road_lines_full: "white_yellow", scripts: "thai" } },
-                { iso_a2: "TZ", name: "Tanzânia", attributes: { driving: "left", road_lines_full: "yellow_white" } },
-                { iso_a2: "TL", name: "Timor-Leste", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "TO", name: "Tonga", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "TT", name: "Trindade e Tobago", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "TV", name: "Tuvalu", attributes: { driving: "left", road_lines_full: "white_white" } },
-                { iso_a2: "UG", name: "Uganda", attributes: { driving: "left", road_lines_full: "white_yellow" } },
-                { iso_a2: "ZM", name: "Zâmbia", attributes: { driving: "left", road_lines_full: "yellow_white" } },
-                { iso_a2: "ZW", name: "Zimbabué", attributes: { driving: "left", road_lines_full: "yellow_white" } },
-                { iso_a2: "NL", name: "Países Baixos", attributes: { license_plate: ["yellow_both", "eu_strip"], cctld: ".nl", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "LU", name: "Luxemburgo", attributes: { license_plate: ["yellow_both", "eu_strip"], road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "GI", name: "Gibraltar", attributes: { license_plate: "yellow_rear", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "PT", name: "Portugal", attributes: { license_plate: "eu_strip", cctld: ".pt", scripts: "latin_diacritics", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "IT", name: "Itália", attributes: { license_plate: ["blue_strips_both_sides", "eu_strip"], cctld: ".it", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "AL", name: "Albânia", attributes: { license_plate: "blue_strips_both_sides", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "FR", name: "França", attributes: { license_plate: ["blue_strips_both_sides", "eu_strip"], cctld: ".fr", bollards: "fr", utility_poles: "fr_blue", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "BE", name: "Bélgica", attributes: { license_plate: ["red_text", "eu_strip"], cctld: ".be", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "IL", name: "Israel", attributes: { license_plate: ["yellow_both", "israel_style"], cctld: ".il", scripts: "hebrew", road_lines_full: ["yellow_white", "white_white"], driving: "right" } },
-                { iso_a2: "CO", name: "Colômbia", attributes: { license_plate: "yellow_both", cctld: ".co", road_lines: "yellow_dashed_center", road_lines_full: ["white_yellow", "white_white"], driving: "right" } },
-                { iso_a2: "KG", name: "Quirguistão", attributes: { scripts: "cyrillic", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "TN", name: "Tunísia", attributes: { license_plate: "black_plate_white_text", scripts: "arabic", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "ES", name: "Espanha", attributes: { bollards: "es", cctld: ".es", scripts: "latin_diacritics", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "IS", name: "Islândia", attributes: { bollards: "is", cctld: ".is", scripts: "latin_diacritics", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "PE", name: "Peru", attributes: { bollards: "pe", road_lines: "yellow_dashed_center", road_lines_full: ["white_yellow", "white_white"], driving: "right" } },
-                { iso_a2: "SE", name: "Suécia", attributes: { road_lines: "white_dashed_outer_short", cctld: ".se", scripts: "latin_diacritics", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "UA", name: "Ucrânia", attributes: { utility_poles: "ua_ru_white_base", google_car: "ua_red_car", cctld: ".ua", scripts: "cyrillic", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "RU", name: "Rússia", attributes: { utility_poles: "ua_ru_white_base", google_car: "ru_black_car_antenna", cctld: ".ru", scripts: "cyrillic", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "MX", name: "México", attributes: { utility_poles: "mx_octagonal", cctld: ".mx", road_lines: "yellow_dashed_center", road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "MN", name: "Mongólia", attributes: { google_car: "mn_snorkel_roof", scripts: "cyrillic", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "GH", name: "Gana", attributes: { google_car: "gh_tape", road_lines_full: ["yellow_white", "yellow_yellow"], driving: "right" } },
-                { iso_a2: "NG", name: "Nigéria", attributes: { google_car: "ng_police", road_lines_full: ["yellow_white", "yellow_yellow"], driving: "right" } },
-                { iso_a2: "GT", name: "Guatemala", attributes: { google_car: "gt_mirrors", road_lines: "yellow_dashed_center", road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "CH", name: "Suíça", attributes: { google_car: "jp_ch_low_cam", cctld: ".ch", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "SN", name: "Senegal", attributes: { google_car: "sn_sky_rift", road_lines_full: ["yellow_white", "yellow_yellow"], driving: "right" } },
-                { iso_a2: "DE", name: "Alemanha", attributes: { cctld: ".de", scripts: "latin_diacritics", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "AR", name: "Argentina", attributes: { cctld: ".ar", road_lines: "yellow_dashed_center", road_lines_full: ["white_yellow", "white_white"], driving: "right" } },
-                { iso_a2: "AT", name: "Áustria", attributes: { cctld: ".at", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "BR", name: "Brasil", attributes: { cctld: ".br", road_lines: "yellow_dashed_center", road_lines_full: "white_yellow", scripts: "latin_diacritics", driving: "right" } },
-                { iso_a2: "CA", name: "Canadá", attributes: { cctld: ".ca", road_lines: "yellow_dashed_center", road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "CL", name: "Chile", attributes: { cctld: ".cl", road_lines: "yellow_dashed_center", road_lines_full: ["white_yellow", "white_white"], driving: "right" } },
-                { iso_a2: "CZ", name: "Chéquia", attributes: { cctld: ".cz", bollards: "cz_sk", scripts: "latin_diacritics", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "DK", name: "Dinamarca", attributes: { cctld: ".dk", bollards: "dk", scripts: "latin_diacritics", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "EE", name: "Estónia", attributes: { cctld: ".ee", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "FI", name: "Finlândia", attributes: { cctld: ".fi", scripts: "latin_diacritics", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "GR", name: "Grécia", attributes: { cctld: ".gr", scripts: "greek", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "HR", name: "Croácia", attributes: { cctld: ".hr", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "HU", name: "Hungria", attributes: { cctld: ".hu", scripts: "latin_diacritics", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "KR", name: "Coreia do Sul", attributes: { cctld: ".kr", road_lines_full: "white_yellow", scripts: "hangul", driving: "right" } },
-                { iso_a2: "LT", name: "Lituânia", attributes: { cctld: ".lt", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "LV", name: "Letónia", attributes: { cctld: ".lv", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "NO", name: "Noruega", attributes: { cctld: ".no", scripts: "latin_diacritics", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "PL", name: "Polónia", attributes: { cctld: ".pl", bollards: "pl", scripts: "latin_diacritics", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "RO", name: "Roménia", attributes: { cctld: ".ro", utility_poles: "ro_holes", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "SI", name: "Eslovénia", attributes: { cctld: ".si", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "SK", name: "Eslováquia", attributes: { cctld: ".sk", bollards: "cz_sk", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "TR", name: "Turquia", attributes: { cctld: ".tr", scripts: "latin_diacritics", road_lines_full: "white_yellow-white-yellow", driving: "right" } },
-                { iso_a2: "US", name: "Estados Unidos", attributes: { cctld: ".us", road_lines: "yellow_dashed_center", road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "BG", name: "Bulgária", attributes: { scripts: "cyrillic", road_lines_full: "white_white", license_plate: "eu_strip", driving: "right" } },
-                { iso_a2: "RS", name: "Sérvia", attributes: { scripts: "cyrillic", road_lines_full: "white_white", driving: "right" } },
-                { iso_a2: "KH", name: "Camboja", attributes: { scripts: "khmer", road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "JO", name: "Jordânia", attributes: { scripts: "arabic", road_lines_full: ["yellow_white", "white_white"], driving: "right" } },
-                { iso_a2: "HT", name: "Haiti", attributes: { road_lines_full: "white_yellow", driving: "right" } },
-                { iso_a2: "AE", name: "Emirados Árabes Unidos", attributes: { scripts: "arabic", road_lines_full: ["yellow_white", "white_white"], driving: "right" } },
-                { iso_a2: "LA", name: "Laos", attributes: { scripts: "lao", driving: "right" } }
+                {
+                    iso_a2: "AI",
+                    name: "Anguila",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "AG",
+                    name: "Antígua e Barbuda",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "AU",
+                    name: "Austrália",
+                    attributes: {
+                        driving: "left",
+                        cctld: ".au",
+                        bollards: "au_bollard",
+                        road_lines_full: "white_white",
+                    },
+                },
+                {
+                    iso_a2: "BS",
+                    name: "Bahamas",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "BD",
+                    name: "Bangladesh",
+                    attributes: {
+                        driving: "left",
+                        google_car: "bd_red_bars",
+                        road_lines_full: "white_white",
+                    },
+                },
+                {
+                    iso_a2: "BB",
+                    name: "Barbados",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "BM",
+                    name: "Bermudas",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "BT",
+                    name: "Butão",
+                    attributes: {
+                        driving: "left",
+                        license_plate: "red_plate_white_text",
+                        road_lines_full: "white_white",
+                    },
+                },
+                {
+                    iso_a2: "BW",
+                    name: "Botsuana",
+                    attributes: { driving: "left", road_lines_full: "yellow_white" },
+                },
+                {
+                    iso_a2: "BN",
+                    name: "Brunei",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "CY",
+                    name: "Chipre",
+                    attributes: {
+                        driving: "left",
+                        license_plate: ["yellow_rear", "eu_strip"],
+                        scripts: "greek",
+                        road_lines_full: "white_white",
+                    },
+                },
+                {
+                    iso_a2: "DM",
+                    name: "Dominica",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "VN",
+                    name: "Vietname",
+                    attributes: { road_lines_full: "white_yellow", driving: "right" },
+                },
+                {
+                    iso_a2: "SZ",
+                    name: "Essuatíni",
+                    attributes: { driving: "left", road_lines_full: "yellow_white" },
+                },
+                {
+                    iso_a2: "FJ",
+                    name: "Fiji",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "GD",
+                    name: "Granada",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "TW",
+                    name: "Taiwan",
+                    attributes: { road_lines_full: "white_yellow", driving: "right" },
+                },
+                {
+                    iso_a2: "GY",
+                    name: "Guiana",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "HK",
+                    name: "Hong Kong",
+                    attributes: {
+                        driving: "left",
+                        road_lines_full: "double_yellow_white",
+                    },
+                },
+                {
+                    iso_a2: "KY",
+                    name: "Ilhas Caimão",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "CK",
+                    name: "Ilhas Cook",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "FK",
+                    name: "Ilhas Malvinas",
+                    attributes: {
+                        driving: "left",
+                        road_lines_full: ["white_yellow", "white_white"],
+                    },
+                },
+                {
+                    iso_a2: "SB",
+                    name: "Ilhas Salomão",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "VI",
+                    name: "Ilhas Virgens Americanas",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "CR",
+                    name: "Costa Rica",
+                    attributes: {
+                        google_car: "cr_white_car_roof_rack",
+                        road_lines_full: "white_yellow",
+                        cctld: ".cr",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "EC",
+                    name: "Equador",
+                    attributes: { road_lines_full: "white_yellow", driving: "right" },
+                },
+                {
+                    iso_a2: "GL",
+                    name: "Groenlândia",
+                    attributes: { road_lines_full: "white_yellow", driving: "right" },
+                },
+                {
+                    iso_a2: "MQ",
+                    name: "Martinica",
+                    attributes: { road_lines_full: "white_yellow", driving: "right" },
+                },
+                {
+                    iso_a2: "PA",
+                    name: "Panamá",
+                    attributes: { road_lines_full: "white_yellow", driving: "right" },
+                },
+                {
+                    iso_a2: "PY",
+                    name: "Paraguai",
+                    attributes: { road_lines_full: "white_yellow", driving: "right" },
+                },
+                {
+                    iso_a2: "PR",
+                    name: "Porto Rico",
+                    attributes: { road_lines_full: "white_yellow", driving: "right" },
+                },
+                {
+                    iso_a2: "DO",
+                    name: "República Dominicana",
+                    attributes: { road_lines_full: "white_yellow", driving: "right" },
+                },
+                {
+                    iso_a2: "UY",
+                    name: "Uruguai",
+                    attributes: {
+                        road_lines_full: ["white_yellow", "white_white"],
+                        license_plate: "uruguay_style",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "VG",
+                    name: "Ilhas Virgens Britânicas",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "IN",
+                    name: "Índia",
+                    attributes: {
+                        driving: "left",
+                        cctld: ".in",
+                        road_lines_full: "white_white",
+                    },
+                },
+                {
+                    iso_a2: "ID",
+                    name: "Indonésia",
+                    attributes: {
+                        driving: "left",
+                        license_plate: "black_plate_white_text",
+                        road_lines_full: "white_white",
+                    },
+                },
+                {
+                    iso_a2: "IE",
+                    name: "Irlanda",
+                    attributes: {
+                        driving: "left",
+                        cctld: ".ie",
+                        road_lines: "yellow_outer",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                    },
+                },
+                {
+                    iso_a2: "JM",
+                    name: "Jamaica",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "JP",
+                    name: "Japão",
+                    attributes: {
+                        driving: "left",
+                        cctld: ".jp",
+                        google_car: "jp_ch_low_cam",
+                        utility_poles: "jp_double",
+                        road_lines_full: "white_yellow",
+                        scripts: "japanese",
+                        bollards: "jp_bollard",
+                    },
+                },
+                {
+                    iso_a2: "LS",
+                    name: "Lesoto",
+                    attributes: { driving: "left", road_lines_full: "yellow_white" },
+                },
+                {
+                    iso_a2: "MO",
+                    name: "Macau",
+                    attributes: {
+                        driving: "left",
+                        road_lines_full: "double_yellow_white",
+                    },
+                },
+                {
+                    iso_a2: "MY",
+                    name: "Malásia",
+                    attributes: {
+                        driving: "left",
+                        cctld: ".my",
+                        bollards: "my_bollard",
+                        road_lines_full: ["white_white", "white_yellow"],
+                    },
+                },
+                {
+                    iso_a2: "MV",
+                    name: "Maldivas",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "MW",
+                    name: "Malawi",
+                    attributes: { driving: "left", road_lines_full: "yellow_white" },
+                },
+                {
+                    iso_a2: "MT",
+                    name: "Malta",
+                    attributes: {
+                        driving: "left",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                    },
+                },
+                {
+                    iso_a2: "MU",
+                    name: "Maurícia",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "MZ",
+                    name: "Moçambique",
+                    attributes: { driving: "left", road_lines_full: "yellow_white" },
+                },
+                {
+                    iso_a2: "MS",
+                    name: "Montserrat",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "NA",
+                    name: "Namíbia",
+                    attributes: { driving: "left", road_lines_full: "yellow_white" },
+                },
+                {
+                    iso_a2: "NR",
+                    name: "Nauru",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "NP",
+                    name: "Nepal",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "NU",
+                    name: "Niue",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "NZ",
+                    name: "Nova Zelândia",
+                    attributes: {
+                        driving: "left",
+                        cctld: ".nz",
+                        bollards: "nz_bollard",
+                        road_lines_full: "white_white",
+                    },
+                },
+                {
+                    iso_a2: "PK",
+                    name: "Paquistão",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "PG",
+                    name: "Papua-Nova Guiné",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "KE",
+                    name: "Quénia",
+                    attributes: {
+                        driving: "left",
+                        google_car: "ke_snorkel",
+                        license_plate: "yellow_rear",
+                        road_lines_full: "white_yellow",
+                        cctld: ".ke",
+                    },
+                },
+                {
+                    iso_a2: "KI",
+                    name: "Quiribati",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "GB",
+                    name: "Reino Unido",
+                    attributes: {
+                        driving: "left",
+                        license_plate: "yellow_rear",
+                        cctld: ".uk",
+                        road_lines_full: "white_white",
+                    },
+                },
+                {
+                    iso_a2: "WS",
+                    name: "Samoa",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "SH",
+                    name: "Santa Helena",
+                    attributes: {
+                        driving: "left",
+                        road_lines_full: ["white_yellow", "white_white"],
+                    },
+                },
+                {
+                    iso_a2: "LC",
+                    name: "Santa Lúcia",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "KN",
+                    name: "São Cristóvão e Neves",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "VC",
+                    name: "São Vicente e Granadinas",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "SC",
+                    name: "Seicheles",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "SG",
+                    name: "Singapura",
+                    attributes: {
+                        driving: "left",
+                        cctld: ".sg",
+                        road_lines_full: "white_white",
+                    },
+                },
+                {
+                    iso_a2: "LK",
+                    name: "Sri Lanka",
+                    attributes: {
+                        driving: "left",
+                        google_car: "lk_red_blur",
+                        road_lines_full: "white_white",
+                        scripts: "sinhala",
+                    },
+                },
+                {
+                    iso_a2: "SR",
+                    name: "Suriname",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "ZA",
+                    name: "África do Sul",
+                    attributes: {
+                        driving: "left",
+                        road_lines: "yellow_outer",
+                        road_lines_full: "yellow_white",
+                    },
+                },
+                {
+                    iso_a2: "TH",
+                    name: "Tailândia",
+                    attributes: {
+                        driving: "left",
+                        cctld: ".th",
+                        bollards: "th_bollard",
+                        road_lines_full: "white_yellow",
+                        scripts: "thai",
+                    },
+                },
+                {
+                    iso_a2: "TZ",
+                    name: "Tanzânia",
+                    attributes: { driving: "left", road_lines_full: "yellow_white" },
+                },
+                {
+                    iso_a2: "TL",
+                    name: "Timor-Leste",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "TO",
+                    name: "Tonga",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "TT",
+                    name: "Trindade e Tobago",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "TV",
+                    name: "Tuvalu",
+                    attributes: { driving: "left", road_lines_full: "white_white" },
+                },
+                {
+                    iso_a2: "UG",
+                    name: "Uganda",
+                    attributes: { driving: "left", road_lines_full: "white_yellow" },
+                },
+                {
+                    iso_a2: "ZM",
+                    name: "Zâmbia",
+                    attributes: { driving: "left", road_lines_full: "yellow_white" },
+                },
+                {
+                    iso_a2: "ZW",
+                    name: "Zimbabué",
+                    attributes: { driving: "left", road_lines_full: "yellow_white" },
+                },
+                {
+                    iso_a2: "NL",
+                    name: "Países Baixos",
+                    attributes: {
+                        license_plate: ["yellow_both", "eu_strip"],
+                        cctld: ".nl",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "LU",
+                    name: "Luxemburgo",
+                    attributes: {
+                        license_plate: ["yellow_both", "eu_strip"],
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "GI",
+                    name: "Gibraltar",
+                    attributes: {
+                        license_plate: "yellow_rear",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "PT",
+                    name: "Portugal",
+                    attributes: {
+                        license_plate: "eu_strip",
+                        cctld: ".pt",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "IT",
+                    name: "Itália",
+                    attributes: {
+                        license_plate: ["blue_strips_both_sides", "eu_strip"],
+                        cctld: ".it",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                        bollards: "it_bollard",
+                    },
+                },
+                {
+                    iso_a2: "AL",
+                    name: "Albânia",
+                    attributes: {
+                        license_plate: "blue_strips_both_sides",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "FR",
+                    name: "França",
+                    attributes: {
+                        license_plate: ["blue_strips_both_sides", "eu_strip"],
+                        cctld: ".fr",
+                        bollards: "fr_bollard",
+                        utility_poles: "fr_blue",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "BE",
+                    name: "Bélgica",
+                    attributes: {
+                        license_plate: ["red_text", "eu_strip"],
+                        cctld: ".be",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "IL",
+                    name: "Israel",
+                    attributes: {
+                        license_plate: ["yellow_both", "israel_style"],
+                        cctld: ".il",
+                        scripts: "hebrew",
+                        road_lines_full: ["yellow_white", "white_white"],
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "CO",
+                    name: "Colômbia",
+                    attributes: {
+                        license_plate: "yellow_both",
+                        cctld: ".co",
+                        road_lines: "yellow_dashed_center",
+                        road_lines_full: ["white_yellow", "white_white"],
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "KG",
+                    name: "Quirguistão",
+                    attributes: {
+                        scripts: "cyrillic",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "TN",
+                    name: "Tunísia",
+                    attributes: {
+                        license_plate: "black_plate_white_text",
+                        scripts: "arabic",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "ES",
+                    name: "Espanha",
+                    attributes: {
+                        bollards: "es_bollard",
+                        cctld: ".es",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "IS",
+                    name: "Islândia",
+                    attributes: {
+                        bollards: "is_bollard",
+                        cctld: ".is",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "PE",
+                    name: "Peru",
+                    attributes: {
+                        bollards: "pe_bollard",
+                        road_lines: "yellow_dashed_center",
+                        road_lines_full: ["white_yellow", "white_white"],
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "SE",
+                    name: "Suécia",
+                    attributes: {
+                        road_lines: "white_dashed_outer_short",
+                        cctld: ".se",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "UA",
+                    name: "Ucrânia",
+                    attributes: {
+                        utility_poles: "ua_ru_white_base",
+                        google_car: "ua_red_car",
+                        cctld: ".ua",
+                        scripts: "cyrillic",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "RU",
+                    name: "Rússia",
+                    attributes: {
+                        utility_poles: "ua_ru_white_base",
+                        google_car: "ru_black_car_antenna",
+                        cctld: ".ru",
+                        scripts: "cyrillic",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "MX",
+                    name: "México",
+                    attributes: {
+                        utility_poles: "mx_octagonal",
+                        cctld: ".mx",
+                        road_lines: "yellow_dashed_center",
+                        road_lines_full: "white_yellow",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "MN",
+                    name: "Mongólia",
+                    attributes: {
+                        google_car: "mn_snorkel_roof",
+                        scripts: "cyrillic",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "GH",
+                    name: "Gana",
+                    attributes: {
+                        google_car: "gh_tape",
+                        road_lines_full: ["yellow_white", "yellow_yellow"],
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "NG",
+                    name: "Nigéria",
+                    attributes: {
+                        google_car: "ng_police",
+                        road_lines_full: ["yellow_white", "yellow_yellow"],
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "GT",
+                    name: "Guatemala",
+                    attributes: {
+                        google_car: "gt_mirrors",
+                        road_lines: "yellow_dashed_center",
+                        road_lines_full: "white_yellow",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "CH",
+                    name: "Suíça",
+                    attributes: {
+                        google_car: "jp_ch_low_cam",
+                        cctld: ".ch",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                        bollards: "ch_bollard",
+                    },
+                },
+                {
+                    iso_a2: "SN",
+                    name: "Senegal",
+                    attributes: {
+                        google_car: "sn_sky_rift",
+                        road_lines_full: ["yellow_white", "yellow_yellow"],
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "DE",
+                    name: "Alemanha",
+                    attributes: {
+                        cctld: ".de",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "AR",
+                    name: "Argentina",
+                    attributes: {
+                        cctld: ".ar",
+                        road_lines: "yellow_dashed_center",
+                        road_lines_full: ["white_yellow", "white_white"],
+                        driving: "right",
+                        bollards: "ar_bollard",
+                    },
+                },
+                {
+                    iso_a2: "AT",
+                    name: "Áustria",
+                    attributes: {
+                        cctld: ".at",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "BR",
+                    name: "Brasil",
+                    attributes: {
+                        cctld: ".br",
+                        road_lines: "yellow_dashed_center",
+                        road_lines_full: "white_yellow",
+                        scripts: "latin_diacritics",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "CA",
+                    name: "Canadá",
+                    attributes: {
+                        cctld: ".ca",
+                        road_lines: "yellow_dashed_center",
+                        road_lines_full: "white_yellow",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "CL",
+                    name: "Chile",
+                    attributes: {
+                        cctld: ".cl",
+                        road_lines: "yellow_dashed_center",
+                        road_lines_full: ["white_yellow", "white_white"],
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "CZ",
+                    name: "Chéquia",
+                    attributes: {
+                        cctld: ".cz",
+                        bollards: "cz_sk_bollard",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "DK",
+                    name: "Dinamarca",
+                    attributes: {
+                        cctld: ".dk",
+                        bollards: "dk_bollard",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "EE",
+                    name: "Estónia",
+                    attributes: {
+                        cctld: ".ee",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "FI",
+                    name: "Finlândia",
+                    attributes: {
+                        cctld: ".fi",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                        bollards: "fi_bollard",
+                    },
+                },
+                {
+                    iso_a2: "GR",
+                    name: "Grécia",
+                    attributes: {
+                        cctld: ".gr",
+                        scripts: "greek",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "HR",
+                    name: "Croácia",
+                    attributes: {
+                        cctld: ".hr",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "HU",
+                    name: "Hungria",
+                    attributes: {
+                        cctld: ".hu",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "KR",
+                    name: "Coreia do Sul",
+                    attributes: {
+                        cctld: ".kr",
+                        road_lines_full: "white_yellow",
+                        scripts: "hangul",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "LT",
+                    name: "Lituânia",
+                    attributes: {
+                        cctld: ".lt",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "LV",
+                    name: "Letónia",
+                    attributes: {
+                        cctld: ".lv",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "NO",
+                    name: "Noruega",
+                    attributes: {
+                        cctld: ".no",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                        bollards: "no_bollard",
+                    },
+                },
+                {
+                    iso_a2: "PL",
+                    name: "Polónia",
+                    attributes: {
+                        cctld: ".pl",
+                        bollards: "pl_bollard",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "RO",
+                    name: "Roménia",
+                    attributes: {
+                        cctld: ".ro",
+                        utility_poles: "ro_holes",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "SI",
+                    name: "Eslovénia",
+                    attributes: {
+                        cctld: ".si",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "SK",
+                    name: "Eslováquia",
+                    attributes: {
+                        cctld: ".sk",
+                        bollards: "cz_sk_bollard",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "TR",
+                    name: "Turquia",
+                    attributes: {
+                        cctld: ".tr",
+                        scripts: "latin_diacritics",
+                        road_lines_full: "white_yellow-white-yellow",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "US",
+                    name: "Estados Unidos",
+                    attributes: {
+                        cctld: ".us",
+                        road_lines: "yellow_dashed_center",
+                        road_lines_full: "white_yellow",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "BG",
+                    name: "Bulgária",
+                    attributes: {
+                        scripts: "cyrillic",
+                        road_lines_full: "white_white",
+                        license_plate: "eu_strip",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "RS",
+                    name: "Sérvia",
+                    attributes: {
+                        scripts: "cyrillic",
+                        road_lines_full: "white_white",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "KH",
+                    name: "Camboja",
+                    attributes: {
+                        scripts: "khmer",
+                        road_lines_full: "white_yellow",
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "JO",
+                    name: "Jordânia",
+                    attributes: {
+                        scripts: "arabic",
+                        road_lines_full: ["yellow_white", "white_white"],
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "HT",
+                    name: "Haiti",
+                    attributes: { road_lines_full: "white_yellow", driving: "right" },
+                },
+                {
+                    iso_a2: "AE",
+                    name: "Emirados Árabes Unidos",
+                    attributes: {
+                        scripts: "arabic",
+                        road_lines_full: ["yellow_white", "white_white"],
+                        driving: "right",
+                    },
+                },
+                {
+                    iso_a2: "LA",
+                    name: "Laos",
+                    attributes: { scripts: "lao", driving: "right" },
+                },
             ];
 
             Object.assign(filterOptions, fullFilterOptions);
             countriesData.push(...fullCountriesData);
         }
     </script>
-
 </body>
 
 </html>
